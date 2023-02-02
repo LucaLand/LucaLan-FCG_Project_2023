@@ -28,6 +28,7 @@ body * {
 #my_Canvas {
     height: 100%;
     float: left;
+    transition: 1s;
 }
 
 #canvas-2 {
@@ -63,9 +64,13 @@ body * {
     text-orientation: upright;
     display: block;
 }
+#ui-container {
+    transition: 1s;
+}
 
 #ui-container.opened{
-    width: 79vw;
+    width: 250px;
+    border: 2px solid red;
     height: 100%;
 }
 
