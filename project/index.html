@@ -7,11 +7,17 @@
     <META HTTP-EQUIV=”Pragma” CONTENT=”no-cache”>
     <META HTTP-EQUIV=”Cache-Control” CONTENT=”no-cache”>
     <link rel="stylesheet" href="mainStyle.css">
+    <link rel="stylesheet" href="libs/ui_style2.css">
 </head>
 
 <body>
 <div id="parent_div">
-    <canvas width="1500" height="600" id="my_Canvas" class="canvas"></canvas>
+    <canvas width="1500" height="800" id="my_Canvas" class="canvas closed"></canvas>
+    <div id="menu-container">
+        <div id="menu-button" onclick="toggleMenu()">MENU</div>
+        <div id="ui-container"></div>
+    </div>
+    <canvas width="700" height="700" id="canvas-2" class="canvas"></canvas>
 </div>
 
 <!-- JS SCRIPT -->
@@ -25,6 +31,22 @@
 
 <!--    Main    -->
 <script type="text/javascript" src="main.js"></script>
+
+<script>
+    function toggleMenu() {
+        let menu = document.getElementById("ui-container")
+        let canvas = document.getElementById("my_Canvas")
+        let menuClasses = menu.getAttribute("class")
+
+        if(menuClasses != null && menuClasses.includes("opened"))
+            menuClasses = "closed"
+        else
+            menuClasses = "opened"
+
+        menu.setAttribute("class", menuClasses)
+        canvas.setAttribute("class", "canvas " + menuClasses)
+    }
+</script>
 
 </body>
 </html>

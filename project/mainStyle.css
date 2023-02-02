@@ -1,0 +1,83 @@
+html, body {
+    margin: 0;
+    height: 100%;
+    /*overflow: hidden;*/
+}
+
+body {
+    background: #dddddd;
+}
+body * {
+    box-sizing: border-box;
+}
+
+#parent_div {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    position: relative;
+}
+
+.canvas {
+    /*padding: 2px;*/
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #aaaaaa;
+}
+
+#my_Canvas {
+    height: 100%;
+    float: left;
+}
+
+#canvas-2 {
+    width: 20%;
+    min-width: 120px;
+    min-height: 120px;
+    max-width: 250px;
+    max-height: 250px;
+    bottom: 0;
+    left: 0;
+    margin: 3px;
+    position: absolute;
+}
+
+#menu-container {
+    box-sizing: border-box;
+    border: 1px inset black;
+    min-width: 1%;
+    max-width: 20%;
+    width: fit-content;
+    height: 100%;
+    float: left;
+}
+
+#menu-button {
+    box-sizing: border-box;
+    width: 1.2vw;
+    height: 100%;
+    border: 2px inset black;
+    font-size: 1em;
+    text-align: center;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    display: block;
+}
+
+#ui-container.opened{
+    width: 79vw;
+    height: 100%;
+}
+
+#ui-container.closed{
+    width: 0;
+    height: 100%;
+}
+
+#my_Canvas.opened{
+    width: 80%;
+}
+
+#my_Canvas.closed{
+    width: 98.6%;
+}
