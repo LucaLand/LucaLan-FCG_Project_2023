@@ -31,16 +31,24 @@ body * {
     transition: 1s;
 }
 
-#canvas-2 {
-    width: 20%;
+#canvas-2-div {
     min-width: 120px;
     min-height: 120px;
-    max-width: 250px;
-    max-height: 250px;
     bottom: 0;
     left: 0;
     margin: 3px;
     position: absolute;
+}
+
+#canvas-2-div.closed {
+    width: 20%;
+    max-width: 250px;
+    max-height: 250px;
+}
+
+#canvas-2 {
+    width: 100%;
+    height: 100%;
 }
 
 #menu-container {
@@ -68,21 +76,40 @@ body * {
     transition: 1s;
 }
 
-#ui-container.opened{
+#ui-container.opened {
     width: 250px;
     border: 2px solid red;
     height: 100%;
 }
 
-#ui-container.closed{
+#ui-container.closed {
     width: 0;
     height: 100%;
 }
 
-#my_Canvas.opened{
+#my_Canvas.opened {
     width: 80%;
 }
 
-#my_Canvas.closed{
+#my_Canvas.closed {
     width: 98.6%;
+}
+
+#canvas-2-div.opened {
+    bottom: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+}
+
+#canvas-2-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#canvas-2-text-foto {
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }

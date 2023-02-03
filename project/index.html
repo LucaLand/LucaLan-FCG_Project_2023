@@ -17,7 +17,11 @@
         <div id="menu-button" onclick="toggleMenu()">MENU</div>
         <div id="ui-container"></div>
     </div>
-    <canvas width="700" height="700" id="canvas-2" class="canvas"></canvas>
+    <div id="canvas-2-div" class="closed">
+        <span id="canvas-2-text-foto" hidden>Foto</span>
+        <span id="canvas-2-close" onclick="toggleCanvas2(false)" hidden>Close X</span>
+        <canvas width="700" height="700" id="canvas-2" class="canvas closed" onclick="toggleCanvas2(true)"></canvas>
+    </div>
 </div>
 
 <!-- JS SCRIPT -->
@@ -45,6 +49,25 @@
 
         menu.setAttribute("class", menuClasses)
         canvas.setAttribute("class", "canvas " + menuClasses)
+    }
+
+    function toggleCanvas2(bool) {
+        let canvas2Div = document.getElementById("canvas-2-div")
+        let closeButton = canvas2Div.children.item(1)
+        let fotoText = canvas2Div.children.item(0)
+
+        // let closeButtonVisbility, fotoTextVisibility;
+        if(bool){
+            canvas2Classes = "opened"
+            closeButton.removeAttribute("hidden")
+            fotoText.removeAttribute("hidden")
+        }else {
+            canvas2Classes = "closed"
+            closeButton.setAttribute("hidden", "")
+            fotoText.setAttribute("hidden", "")
+        }
+
+        canvas2Div.setAttribute("class", canvas2Classes)
     }
 </script>
 
