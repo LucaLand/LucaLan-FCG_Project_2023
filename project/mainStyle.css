@@ -38,12 +38,19 @@ body * {
     left: 0;
     margin: 3px;
     position: absolute;
+    transition: 1s;
 }
 
 #canvas-2-div.closed {
-    width: 20%;
-    max-width: 250px;
-    max-height: 250px;
+    width: 18vw;
+    height: 18vw;
+}
+
+#canvas-2-div.opened {
+    bottom: 5%;
+    left: 5%;
+    width: 90vw;
+    height: 90vh;
 }
 
 #canvas-2 {
@@ -93,13 +100,6 @@ body * {
 
 #my_Canvas.closed {
     width: 98.6%;
-}
-
-#canvas-2-div.opened {
-    bottom: 5%;
-    left: 5%;
-    width: 90%;
-    height: 90%;
 }
 
 #canvas-2-close {
