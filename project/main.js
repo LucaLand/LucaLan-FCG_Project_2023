@@ -1,16 +1,24 @@
+"use strict";
+
 function main() {
     // Get A WebGL context
     let canvas = document.getElementById("my_Canvas");
-    let gl = canvas.getContext("webgl");
+    const gl = canvas.getContext("webgl");
     if (!gl) {
         return;
     }
     let skybox = new Skybox(gl);
     let camera = new CameraManager(gl);
+    camera.computeMatrix();
+    let objManager = new ObjManager(gl);
 
     // setup GLSL programs and lookup locations
     const envmapProgramInfo = webglUtils.createProgramInfo(gl, ["envmap-vertex-shader", "envmap-fragment-shader"]);
+    const program = webglUtils.createProgramFromScripts(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+
     skybox.loadSkybox();
+    let boeing = objManager.loadObj("Ciaooo", "assets/objs/boeing_3.obj");
+
 
     //draw with starting time 0
     let then = 0;
@@ -36,11 +44,26 @@ function main() {
         // Clear the canvas AND the depth buffer.
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+        let cameraPosition = [2, 0, 2];
+        let up = [0, 1, 0];
+        let target = [0, 0, 0];
+        let fieldOfViewRadians = degToRad(30);
+
+
+        camera.cameraPosition = cameraPosition;
+        camera.up = up;
+        camera.target = target;
+        camera.fieldOfViewRadians = fieldOfViewRadians;
+
         //Camera Compute Matrix
-        camera.computeMatrix(time);
+        camera.computeMatrix();
 
         //Draw Skybox
         skybox.drawSkybox(camera.viewMatrix, camera.projectionMatrix);
+
+        // Draw the geometry.
+        boeing.prepareObjDraw(gl, camera, program);
+        gl.drawArrays(gl.TRIANGLES, 0, boeing.numVertices);
 
         requestAnimationFrame(drawScene);
     }

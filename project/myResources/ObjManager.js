@@ -15,6 +15,8 @@ let MeshData = function(){
 
 let ObjManager = function (gl){
     let idMesh = 0; //Incremental id of the MeshObjects
+    let objList = [];
+
     this.loadObj= function(name, sourcePath) {
         let meshData = new MeshData();
 
@@ -83,6 +85,9 @@ let ObjManager = function (gl){
         console.log("Loaded Obj - id:" + idMesh + " || Name: " + name)
         console.log("ObjManager")
         console.log(mesh)
-        return new ObjMesh(idMesh++, name, mesh, meshData)
+        let newObj = new ObjMesh(idMesh++, name, mesh, meshData);
+        objList.push(newObj);
+
+        return newObj;
     }
 }
