@@ -52,13 +52,13 @@ let ObjMesh = function (id, name, mesh, meshData){
         let ambientLight=[0.2,0.2,0.2];
         let colorLight=[1.0,1.0,1.0];
 
-        gl.uniform3fv(gl.getUniformLocation(program, "diffuse" ), this.diffuse );
+        gl.uniform3fv(gl.getUniformLocation(program, "diffuse"), this.diffuse);
         gl.uniform3fv(gl.getUniformLocation(program, "ambient" ), this.ambient);
-        gl.uniform3fv(gl.getUniformLocation(program, "specular"), this.specular );
-        gl.uniform3fv(gl.getUniformLocation(program, "emissive"), this.emissive );
+        gl.uniform3fv(gl.getUniformLocation(program, "specular"), this.specular);
+        gl.uniform3fv(gl.getUniformLocation(program, "emissive"), this.emissive);
         //gl.uniform3fv(gl.getUniformLocation(program, "u_lightDirection" ), xxx );
-        gl.uniform3fv(gl.getUniformLocation(program, "u_ambientLight" ), ambientLight );
-        gl.uniform3fv(gl.getUniformLocation(program, "u_colorLight" ), colorLight );
+        gl.uniform3fv(gl.getUniformLocation(program, "u_ambientLight" ), ambientLight);
+        gl.uniform3fv(gl.getUniformLocation(program, "u_colorLight" ), colorLight);
 
         gl.uniform1f(gl.getUniformLocation(program, "shininess"), this.shininess);
         gl.uniform1f(gl.getUniformLocation(program, "opacity"), this.opacity);

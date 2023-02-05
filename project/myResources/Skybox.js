@@ -1,5 +1,6 @@
+"use strict";
 let Skybox = function (gl) {
-    this.skyboxProgramInfo = webglUtils.createProgramInfo(gl, ["skybox-vertex-shader", "skybox-fragment-shader"]);
+    this.skyboxProgramInfo = programs.SkyBoxProgramInfo
     this.texture = null;
 
     this.loadSkybox = function(){

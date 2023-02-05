@@ -15,7 +15,7 @@ let MeshData = function(){
 
 let ObjManager = function (gl){
     let idMesh = 0; //Incremental id of the MeshObjects
-    let objList = [];
+    let objList = []; //TODO. make this a map with key the name of the objects, to get them. Use this to print all
 
     this.loadObj= function(name, sourcePath) {
         let meshData = new MeshData();
