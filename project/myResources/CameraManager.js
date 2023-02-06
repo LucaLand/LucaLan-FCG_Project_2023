@@ -25,6 +25,23 @@ let CameraManager = function (gl){
      this.viewMatrix = m4.inverse(this.cameraMatrix);
  }
 
+ this.computeMatrix();
+
+     this.setCameraAttrDefault1 = function (){
+        const camera = this;
+
+        let cameraPosition = [3, 0, 3];
+        let up = [0, 1, 0];
+        let target = [0, 0, 0];
+        let fieldOfViewRadians = degToRad(60);
+
+        camera.cameraPosition = cameraPosition;
+        camera.up = up;
+        camera.target = target;
+        camera.fieldOfViewRadians = fieldOfViewRadians;
+        camera.computeMatrix(); //Camera Compute Matrix
+    }
+
  //TODO. Add setter and getter for camera data (and autocompute matrix on this changes -  add this.matrixAutoUpdate = true)
 
 }

@@ -96,7 +96,8 @@ let Skybox = function (gl) {
         };
     }
 
-    this.drawSkybox = function (viewMatrix, projectionMatrix){
+    this.drawSkybox = function (camera){
+        let viewMatrix = camera.viewMatrix, projectionMatrix = camera.projectionMatrix;
         if(this.texture == null)
             console.log("Skybox non initialized! (loadSkybox()!)")
 

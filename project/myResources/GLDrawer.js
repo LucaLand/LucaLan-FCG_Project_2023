@@ -17,8 +17,10 @@ let GLDrawer = function (canvasId){
     programs.ObjsProgramInfo =  webglUtils.createProgramInfo(this.gl, ["3d-vertex-shader", "3d-fragment-shader"]);
 
     this.camera = new CameraManager(this.gl);
+
     this.ambientLight = [0.2,0.2,0.2];
     this.colorLight = [1.0,1.0,1.0];
+    this.lightDirection = m4.normalize([-1, 3, 5]);
 
     this.getGL = function (){
         return this.gl;
@@ -31,21 +33,28 @@ let GLDrawer = function (canvasId){
     let objProgramUniforms = {
         u_ambientLight: this.ambientLight,
         u_colorLight: this.colorLight,
-        u_lightDirection: m4.normalize([-1, 3, 5]),
+        u_lightDirection: this.lightDirection,
         u_view: this.camera.viewMatrix,
         u_projection: this.camera.projectionMatrix,
         u_viewWorldPosition: this.camera.cameraPosition
     }
 
     this.updateObjProgramUniforms = function (){
+        this.camera.computeMatrix();
+
         objProgramUniforms = {
             u_ambientLight: this.ambientLight,
             u_colorLight: this.colorLight,
-            u_lightDirection: m4.normalize([-1, 3, 5]),
+            u_lightDirection: this.lightDirection,
             u_view: this.camera.viewMatrix,
             u_projection: this.camera.projectionMatrix,
             u_viewWorldPosition: this.camera.cameraPosition
         }
+
+        // console.log("GLDrawer: Updating Unifroms");
+        //console.log("Program uniform:");
+        //console.log(objProgramUniforms);
+        // console.log(this.camera);
     }
 
     function objWriteBuffers(gl, positions, normals, texcoords){
