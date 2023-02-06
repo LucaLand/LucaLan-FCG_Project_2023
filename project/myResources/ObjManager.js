@@ -11,9 +11,10 @@ let MeshData = function(){
     this.emissive = [0,0,0];
     this.shininess = [0,0,0];
     this.opacity = 0.0;
+    this.textureImage = null;
 }
 
-let ObjManager = function (gl){
+let ObjManager = function (){
     let idMesh = 0; //Incremental id of the MeshObjects
     let objList = []; //TODO. make this a map with key the name of the objects, to get them. Use this to print all
 
@@ -29,8 +30,13 @@ let ObjManager = function (gl){
         //Ora che ho la mesh e il/i materiali associati, mi occupo di caricare
         //la/le texture che tali materiali contengono
         let map = mesh.materials[1].parameter;
-        meshData.textureRootPath = mesh.sourceMesh.substring(0, mesh.sourceMesh.lastIndexOf("/")+1);
-        map.set("map_Kd", loadTexture(gl, meshData.textureRootPath, map.get("map_Kd")));
+        let textureImage;
+        if(map.get("map_Kd") !== undefined) {
+            meshData.textureRootPath = mesh.sourceMesh.substring(0, mesh.sourceMesh.lastIndexOf("/") + 1);
+            textureImage = loadTextureImage(meshData.textureRootPath + map.get("map_Kd"));
+        }else {
+            textureImage = null;
+        }
 
         let x=[], y=[], z=[];
         let xt=[], yt=[];
@@ -81,6 +87,8 @@ let ObjManager = function (gl){
             meshData.opacity=mesh.materials[1].parameter.get("Ni");
         }
 
+        meshData.textureImage = textureImage;
+
         //Log
         console.log("Loaded Obj - id:" + idMesh + " || Name: " + name)
         console.log("ObjManager")
@@ -89,5 +97,11 @@ let ObjManager = function (gl){
         objList.push(newObj);
 
         return newObj;
+    }
+
+    function loadTextureImage(textureImagePath){
+        const image = new Image();
+        image.src = textureImagePath;
+        return image;
     }
 }

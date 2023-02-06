@@ -117,19 +117,24 @@ let GLDrawer = function (canvasId){
         let gl = this.getGL();
         let programInfo = programs.ObjsProgramInfo;
 
+        if(objMesh.textureImage !== null)
+            this.loadObjTextureIntoBuffer(objMesh.textureImage);
+        else
+            this.loadDefaultTexture();
+        // console.log("Texture: ")
+        // console.log(objMesh.textureImage);
+
         //Setting program and Uniforms
         gl.useProgram(programs.ObjsProgramInfo.program);
         objWriteBuffers(gl, objMesh.positions, objMesh.normals, objMesh.texcoords);
         this.updateObjProgramUniforms();
         webglUtils.setUniforms(programInfo, objProgramUniforms); //TODO. do this uniform set in a init funct of the gl (update this only in case of background changes or camera changes)
         gl.uniform1i(gl.getUniformLocation(programInfo.program, "diffuseMap"), 0);  // Tell the shader to use texture unit 0 for diffuseMap
-        webglUtils.setUniforms(programInfo, objMesh.getObjUnifrom());
+        webglUtils.setUniforms(programInfo, objMesh.getObjUniforms());
 
         //DRAW the obj
         gl.drawArrays(this.getGL().TRIANGLES, 0, objMesh.numVertices);
     }
-
-
 
 
     this.preRender = function (){
@@ -144,6 +149,44 @@ let GLDrawer = function (canvasId){
 
         // Clear the canvas AND the depth buffer.
         gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    }
+
+    this.loadObjTextureIntoBuffer = function (textureImage){
+        let gl = this.getGL();
+
+        const texture = gl.createTexture();
+        const level = 0;
+        const internalFormat = gl.RGBA;
+        const srcFormat = gl.RGBA;
+        const srcType = gl.UNSIGNED_BYTE;
+
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,srcFormat, srcType, textureImage);
+        if (isPowerOf2(textureImage.width) && isPowerOf2(textureImage.height))
+            gl.generateMipmap(gl.TEXTURE_2D); // Yes, it's a power of 2. Generate mips.
+        else {
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        }
+    }
+
+    this.loadDefaultTexture = function (){
+        let gl = this.getGL();
+
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        const level = 0;
+        const internalFormat = gl.RGBA;
+        const width = 1;
+        const height = 1;
+        const border = 0;
+        const srcFormat = gl.RGBA;
+        const srcType = gl.UNSIGNED_BYTE;
+        const pixel = new Uint8Array([255, 255, 255, 255]);  // opaque blue
+        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, srcFormat, srcType, pixel);
     }
 
 

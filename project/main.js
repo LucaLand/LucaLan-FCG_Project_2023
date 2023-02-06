@@ -12,7 +12,7 @@ function main() {
 
     skybox.loadSkybox();
     const boeing = objManager.loadObj("boeing", "assets/objs/boeing_3.obj");
-    // const chair = objManager.loadObj("chair", "assets/objs/chair.obj");
+    const chair = objManager.loadObj("chair", "assets/objs/chair.obj");
 
 
 
@@ -35,7 +35,7 @@ function main() {
 
         // Draw the geometry.
         canvas1GlDrawer.objDraw(boeing);
-        //canvas1GlDrawer.objDraw(chair);
+        canvas1GlDrawer.objDraw(chair);
 
         requestAnimationFrame(drawScene);
     }

@@ -11,6 +11,7 @@ let ObjMesh = function (id, name, mesh, meshData){
     this.normals = meshData.normals;
     this.texcoords = meshData.texcoords;
     this.numVertices = meshData.numVertices;
+    this.textureImage = meshData.textureImage;
 
     this.ambient = meshData.ambient;   //Ka
     this.diffuse = meshData.diffuse;   //Kd
@@ -20,7 +21,7 @@ let ObjMesh = function (id, name, mesh, meshData){
     this.opacity = meshData.opacity;   //Ni
     this.meshMatrix = m4.identity(); //Obj world matrix
 
-    this.getObjUnifrom = function () {
+    this.getObjUniforms = function () {
         let objUniforms = {
             u_world: this.meshMatrix, //The one to chnage for the obj attributes
             diffuse: this.diffuse,
