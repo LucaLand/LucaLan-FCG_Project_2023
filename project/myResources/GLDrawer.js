@@ -108,26 +108,13 @@ let GLDrawer = function (canvasId){
         let gl = this.getGL();
         let programInfo = programs.ObjsProgramInfo;
 
-        let matrix = m4.identity();
-        matrix = m4.xRotate(matrix, degToRad(0));
-        matrix = m4.yRotate(matrix, degToRad(0));
-
-        let objUniform = {
-            u_world: matrix, //The one to chnage for the obj attributes
-            diffuse: objMesh.diffuse,
-            ambient: objMesh.ambient,
-            specular: objMesh.specular,
-            emissive: objMesh.emissive,
-            shininess: objMesh.shininess,
-            opacity: objMesh.opacity
-        }
         //Setting program and Uniforms
         gl.useProgram(programs.ObjsProgramInfo.program);
         objWriteBuffers(gl, objMesh.positions, objMesh.normals, objMesh.texcoords);
         this.updateObjProgramUniforms();
-        webglUtils.setUniforms(programInfo, objProgramUniforms);
+        webglUtils.setUniforms(programInfo, objProgramUniforms); //TODO. do this uniform set in a init funct of the gl (update this only in case of background changes or camera changes)
         gl.uniform1i(gl.getUniformLocation(programInfo.program, "diffuseMap"), 0);  // Tell the shader to use texture unit 0 for diffuseMap
-        webglUtils.setUniforms(programInfo, objUniform);
+        webglUtils.setUniforms(programInfo, objMesh.getObjUnifrom());
 
         //DRAW the obj
         gl.drawArrays(this.getGL().TRIANGLES, 0, objMesh.numVertices);
