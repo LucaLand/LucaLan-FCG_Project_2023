@@ -13,8 +13,10 @@ let CameraManager = function (gl){
     this.zfar = 200;
     this.distance = 5;
 
-    this.theta = 0;
-    this.phi = 0;
+    this.theta = degToRad(0);   //Angolo su x
+    this.phi = degToRad(90);     //Angolo su z
+
+    let DLimitMax = 10, DLimitMin = 1;
 
 
  this.computeMatrix = function (){
@@ -43,16 +45,32 @@ let CameraManager = function (gl){
         camera.up = up;
         camera.target = target;
         camera.fieldOfViewRadians = fieldOfViewRadians;
+
+        this.theta = degToRad(0);
+        this.phi = degToRad(90);
+        camera.computeCameraMatrixWithPolarCords();
         camera.computeMatrix(); //Camera Compute Matrix
     }
 
     this.rotateCamera = function (dTheta, dPhi){
-        let D = this.distance;
         this.theta += dTheta;
         this.phi += dPhi;
-        this.cameraPosition =[  D * Math.sin(this.theta) * Math.sin(this.phi),
-                                D * Math.cos(this.phi),
-                                D * Math.cos(this.theta) * Math.sin(this.phi)];
+        this.computeCameraMatrixWithPolarCords();
+    }
+
+    this.translateCameraDistance = function (deltaDistance) {
+        let d = this.distance;
+        if((d + deltaDistance) < DLimitMax && (d + deltaDistance) > DLimitMin)
+            this.distance += deltaDistance;
+        console.log("Camera Distance: " + this.distance)
+        this.computeCameraMatrixWithPolarCords();
+    }
+
+    this.computeCameraMatrixWithPolarCords = function (){
+        let D = this.distance;
+         this.cameraPosition =[D * Math.sin(this.theta) * Math.sin(this.phi),
+            D * Math.cos(this.phi),
+            D * Math.cos(this.theta) * Math.sin(this.phi)];
         //To go upside down (don't make camera twist in the pole)
         this.up = [0, Math.sin(this.phi), 0];
         this.computeMatrix();

@@ -8,7 +8,8 @@ const events = {
         onKeyUp: "keyup",
         onTouchStart: "touchstart",
         onTouchEnd: "touchend",
-        ontouchmove: "touchmove"
+        onTouchMove: "touchmove",
+        onWheel: "wheel"
 };
 
 const UserInputHandler = function (cam, canvas){
@@ -41,6 +42,7 @@ const UserInputHandler = function (cam, canvas){
     }
 
     function handleUserEvent(eventType, e){
+        //TODO. Remove and associate directly the handler in addEventListener (in the attach function)
         eventHandlerArrayMap.forEach(entry => {
             if(entry.eventName === eventType)
                 entry.eventHandler(e);
@@ -61,7 +63,7 @@ const UserInputHandler = function (cam, canvas){
         e.preventDefault();
     }
 
-    const mouseMoveDefaultHandler = function(e){
+    const mouseMoveDefaultHandler = function (e){
        if(drag){
            let cur = {x: e.pageX, y:e.pageY};   //windowToCanvas(canvas, e.pageX, e.pageY);
            let dX = -(cur.x-old.x)*2*Math.PI/canvas.width;
@@ -73,11 +75,18 @@ const UserInputHandler = function (cam, canvas){
         e.preventDefault();
     }
 
+    const wheelHandler = function (e){
+        console.log("Wheel DeltaY: " + e.deltaY);
+        camera.translateCameraDistance(e.deltaY/300)
+        e.preventDefault();
+    }
+
 
     const eventHandlerArrayMap = [
         {eventName: events.onMouseDown, eventHandler: mouseDownDefaultHandler},
         {eventName: events.onMouseUp, eventHandler: mouseUpDefaultHandler},
-        {eventName: events.onMouseMove, eventHandler: mouseMoveDefaultHandler}
+        {eventName: events.onMouseMove, eventHandler: mouseMoveDefaultHandler},
+        {eventName: events.onWheel, eventHandler: wheelHandler}
     ]
 
 
