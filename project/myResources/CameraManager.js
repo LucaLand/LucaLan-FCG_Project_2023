@@ -11,6 +11,10 @@ let CameraManager = function (gl){
     this.up = [0, 1, 0];
     this.zmin = 0.1;
     this.zfar = 200;
+    this.distance = 5;
+
+    this.theta = 0;
+    this.phi = 0;
 
 
  this.computeMatrix = function (){
@@ -41,6 +45,39 @@ let CameraManager = function (gl){
         camera.fieldOfViewRadians = fieldOfViewRadians;
         camera.computeMatrix(); //Camera Compute Matrix
     }
+
+    this.rotateCamera = function (dTheta, dPhi){
+        let D = this.distance;
+        this.theta += dTheta;
+        this.phi += dPhi;
+        this.cameraPosition =[  D * Math.sin(this.theta) * Math.sin(this.phi),
+                                D * Math.cos(this.phi),
+                                D * Math.cos(this.theta) * Math.sin(this.phi)];
+        //To go upside down (don't make camera twist in the pole)
+        this.up = [0, Math.sin(this.phi), 0];
+        this.computeMatrix();
+    }
+
+    // this.setCameraPositionWithAngles = function (theta, phi){
+    //      let D = this.distance;
+    //      this.cameraPosition =[D*Math.sin(phi)*Math.cos(theta),
+    //          D*Math.sin(phi)*Math.sin(theta),
+    //          D*Math.cos(phi)];
+    //      updateCameraAngles(theta, phi);
+    //      this.computeMatrix();
+    // }
+    //
+    // this.getCameraAngles = function (){
+    //      return {
+    //          theta: this.theta,
+    //          phi: this.phi
+    //      }
+    // }
+    //
+    // function updateCameraAngles(t, p){
+    //      this.theta = t;
+    //      this.phi = p;
+    // }
 
  //TODO. Add setter and getter for camera data (and autocompute matrix on this changes -  add this.matrixAutoUpdate = true)
 

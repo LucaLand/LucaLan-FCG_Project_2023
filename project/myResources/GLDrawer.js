@@ -30,6 +30,10 @@ let GLDrawer = function (canvasId){
         return this.camera;
     }
 
+    this.getCanvas = function (){
+        return canvas;
+    }
+
     let objProgramUniforms = {
         u_ambientLight: this.ambientLight,
         u_colorLight: this.colorLight,
