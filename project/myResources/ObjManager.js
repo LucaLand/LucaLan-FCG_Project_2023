@@ -104,4 +104,12 @@ let ObjManager = function (){
         image.src = textureImagePath;
         return image;
     }
+
+    this.duplicateObj = function (objMesh){
+        if(objList.includes(objMesh)){
+            let duplicateObj = new ObjMesh(idMesh++, objMesh.name, objMesh.mesh, objMesh.meshData);
+            objList.push(duplicateObj);
+        }
+        return null;
+    }
 }

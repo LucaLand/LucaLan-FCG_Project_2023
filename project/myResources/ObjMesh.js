@@ -4,8 +4,9 @@ let ObjMesh = function (id, name, mesh, meshData){
     console.log(meshData);
 
     this.id = id;
-    this.name = name+id;
+    this.name = name;
     this.mesh = mesh;
+    this.meshData = meshData;
 
     this.positions = meshData.positions;
     this.normals = meshData.normals;
