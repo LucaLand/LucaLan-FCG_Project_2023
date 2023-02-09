@@ -112,4 +112,8 @@ let ObjManager = function (){
         }
         return null;
     }
+
+    this.getAllObjMesh = function (){
+        return objList;
+    }
 }

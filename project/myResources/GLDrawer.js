@@ -193,5 +193,11 @@ let GLDrawer = function (canvasId){
         gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, srcFormat, srcType, pixel);
     }
 
+    this.multipleObjDraw = function (objMeshList){
+        objMeshList.forEach(objmesh => {
+            this.objDraw(objmesh);
+        })
+    }
+
 
 }
