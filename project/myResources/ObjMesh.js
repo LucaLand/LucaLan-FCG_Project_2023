@@ -1,5 +1,13 @@
 "use strict";
 
+//TODO. Do a global j file with global variable, enum and constants
+const directions = {
+    Forward: "f",
+    Backward: "b",
+    Right: "r",
+    Left: "l"
+}
+
 let ObjMesh = function (id, name, mesh, meshData){
     console.log(meshData);
 
@@ -78,12 +86,28 @@ let ObjMesh = function (id, name, mesh, meshData){
     this.computeMatrix = function () {
         let matrix = m4.identity();
         matrix = m4.translate(matrix, objPosition.x, objPosition.y, objPosition.z);
-        matrix = m4.xRotate(matrix, degToRad(objRotation.x));
-        matrix = m4.yRotate(matrix, degToRad(objRotation.y));
-        matrix = m4.zRotate(matrix, degToRad(objRotation.z));
+        matrix = m4.xRotate(matrix, objRotation.x);
+        matrix = m4.yRotate(matrix, objRotation.y);
+        matrix = m4.zRotate(matrix, objRotation.z);
         matrix = m4.scale(matrix, objScale.x, objScale.y, objScale.z);
         this.meshMatrix = matrix;
         return matrix;
     }
 
+    this.move = function (directionAxis, step){
+        let dxf = step * Math.sin(objRotation.y);
+        let dzf = step * Math.cos(objRotation.y);
+        let dxr = step * Math.sin(objRotation.y + degToRad(90));
+        let dzr = step * Math.cos(objRotation.y + degToRad(90));
+        switch (directionAxis){
+            case directions.Forward: this.translate(dxf, 0, dzf); break;
+            case directions.Backward: this.translate(-dxf, 0, -dzf); break;
+            case directions.Right: this.translate(-dxr, 0, -dzr); break;
+            case directions.Left: this.translate(dxr, 0, dzr); break;
+        }
+    }
+
+
+
 }
+
