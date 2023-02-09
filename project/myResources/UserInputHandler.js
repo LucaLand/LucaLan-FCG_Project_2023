@@ -16,6 +16,7 @@ const UserInputHandler = function (cam, canvas){
     let camera = cam;
     let drag = false;
     let old = {x:0, y:0};
+    let targetObjMesh = null;
 
     this.attachDefaultHandler = function (object, eventType){
         console.log("Adding event listener for Obj:" + object +" eType:" + eventType);
@@ -81,13 +82,43 @@ const UserInputHandler = function (cam, canvas){
         e.preventDefault();
     }
 
+    const keyDownHandlerMap = function (e){
+        if(targetObjMesh !== null) {
+            switch (e.code) {
+                case "KeyW":
+                    targetObjMesh.move(directions.Forward, 0.2);
+                    break;
+                case "KeyS":
+                    targetObjMesh.move(directions.Backward, 0.2);
+                    break;
+                case "KeyE":
+                    targetObjMesh.move(directions.Right, 0.2);
+                    break;
+                case "KeyQ":
+                    targetObjMesh.move(directions.Left, 0.2);
+                    break;
+                case "KeyA":
+                    targetObjMesh.rotate(0, 5, 0);
+                    break;
+                case "KeyD":
+                    targetObjMesh.rotate(0, -5, 0);
+                    break;
+            }
+        }
+        console.log(e);
+    }
 
     const eventHandlerArrayMap = [
         {eventName: events.onMouseDown, eventHandler: mouseDownDefaultHandler},
         {eventName: events.onMouseUp, eventHandler: mouseUpDefaultHandler},
         {eventName: events.onMouseMove, eventHandler: mouseMoveDefaultHandler},
-        {eventName: events.onWheel, eventHandler: wheelHandler}
+        {eventName: events.onWheel, eventHandler: wheelHandler},
+        {eventName: events.onKeyDown, eventHandler: keyDownHandlerMap}
     ]
+
+    this.setMovementTarget = function (movementTargetObj){
+        targetObjMesh = movementTargetObj;
+    }
 
 
 }
