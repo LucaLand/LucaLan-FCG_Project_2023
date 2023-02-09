@@ -21,7 +21,13 @@ let ObjMesh = function (id, name, mesh, meshData){
     this.opacity = meshData.opacity;   //Ni
     this.meshMatrix = m4.identity(); //Obj world matrix
 
+    let objPosition = {x:0, y:0, z:0};
+    let objRotation = {x:0, y:0, z:0};
+    let objScale = {x:1, y:1, z:1};
+
+
     this.getObjUniforms = function () {
+        this.computeMatrix();
         let objUniforms = {
             u_world: this.meshMatrix, //The one to chnage for the obj attributes
             diffuse: this.diffuse,
@@ -33,4 +39,50 @@ let ObjMesh = function (id, name, mesh, meshData){
         }
         return objUniforms;
     }
+
+    this.getPosition = function (){
+        return [objPosition.x, objPosition.y, objPosition.z];
+    }
+
+    this.setPosition = function (x, y, z){
+        objPosition.x = x;
+        objPosition.y = y;
+        objPosition.z = z;
+    }
+
+    this.translate = function (dx, dy, dz){
+        objPosition.x += dx;
+        objPosition.y += dy;
+        objPosition.z += dz;
+    }
+
+    this.rotate = function (dx, dy, dz){
+        objRotation.x += degToRad(dx);
+        objRotation.y += degToRad(dy);
+        objRotation.z += degToRad(dz);
+    }
+
+    this.setRotation = function (x, y, z){
+        objRotation.x = x;
+        objRotation.y = y;
+        objRotation.z = z;
+    }
+
+    this.setScale = function (x, y, z){
+        objScale.x = x;
+        objScale.y = y;
+        objScale.z = z;
+    }
+
+    this.computeMatrix = function () {
+        let matrix = m4.identity();
+        matrix = m4.translate(matrix, objPosition.x, objPosition.y, objPosition.z);
+        matrix = m4.xRotate(matrix, degToRad(objRotation.x));
+        matrix = m4.yRotate(matrix, degToRad(objRotation.y));
+        matrix = m4.zRotate(matrix, degToRad(objRotation.z));
+        matrix = m4.scale(matrix, objScale.x, objScale.y, objScale.z);
+        this.meshMatrix = matrix;
+        return matrix;
+    }
+
 }
