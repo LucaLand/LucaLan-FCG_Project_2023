@@ -13,11 +13,17 @@ function main() {
 
 
     skybox.loadSkybox();
-    const boeing = objManager.loadObj("boeing", "assets/objs/boeing_3.obj");
-    const chair = objManager.loadObj("chair", "assets/objs/chair.obj");
+    // const boeing = objManager.loadObj("boeing", "assets/objs/boeing_3.obj");
+    // const chair = objManager.loadObj("chair", "assets/objs/chair.obj");
+    const objCamera = objManager.loadObj("camera", "assets/objs/camera.obj")
+    //testing duplication
+    const objCmaera2 = objManager.duplicateObj(objCamera);
+    userInputHandler.setMovementTarget(objCamera);
 
     userInputHandler.attachAllDefaultHandlers(canvas1GlDrawer.getCanvas())
     camera.setCameraAttrDefault1(); //Set the camera
+    //Testing following target for camera
+    camera.setTargetObj(objCamera);
 
 
     //draw with starting time 0
@@ -35,9 +41,11 @@ function main() {
         //Draw Skybox
         skybox.drawSkybox(canvas1GlDrawer.getCamera());
 
-        // Draw the geometry.
-        canvas1GlDrawer.objDraw(boeing);
-        canvas1GlDrawer.objDraw(chair);
+        //Camera Movement test
+        //objCamera.translate(0.01, 0,0);
+
+        //Draw all the Geometries loaded
+        canvas1GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
 
         requestAnimationFrame(drawScene);
     }
