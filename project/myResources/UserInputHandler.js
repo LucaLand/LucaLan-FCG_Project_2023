@@ -53,7 +53,7 @@ const UserInputHandler = function (cam, canvas){
         drag = true;
         old.x = e.pageX;
         old.y = e.pageY;
-        e.preventDefault();
+        //e.preventDefault();
     }
 
     const mouseUpDefaultHandler = function (e){
