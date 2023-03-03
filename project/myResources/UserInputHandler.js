@@ -120,6 +120,28 @@ const UserInputHandler = function (cam, canvas){
         targetObjMesh = movementTargetObj;
     }
 
+    this.setCameraMode = function (mode){
+        switch (mode) {
+            case cameraModesEnum.thirdPerson:
+                camera.setCameraAttrDefault1();
+                break;
+            case cameraModesEnum.firstPerson:
+                camera.polarMode = false;
+                camera.setFollowTargetObj(false);
+                camera.up = [0,1,0];
+                this.updateFirstPersonforCamera();
+                break;
+        }
+    }
+
+    this.updateFirstPersonforCamera = function (){
+        camera.setCameraPosition(targetObjMesh.getPosition()[0], targetObjMesh.getPosition()[1], targetObjMesh.getPosition()[2]);
+        camera.setAngle(targetObjMesh.getRotation()[1]);
+        camera.move(directions.Forward, 1);
+        camera.setTargetForward();
+    }
+
+
 
 }
 

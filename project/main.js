@@ -10,21 +10,22 @@ function main() {
     let skybox = new Skybox(canvas1GlDrawer.getGL());
     let objManager = new ObjManager(canvas1GlDrawer.getGL());
     let userInputHandler = new UserInputHandler(camera, canvas1GlDrawer.getCanvas());
-
+    let cameraMode = cameraModesEnum.firstPerson;
 
     skybox.loadSkybox();
     // const boeing = objManager.loadObj("boeing", "assets/objs/boeing_3.obj");
     // const chair = objManager.loadObj("chair", "assets/objs/chair.obj");
+
+
     const objCamera = objManager.loadObj("camera", "assets/objs/camera.obj")
     //testing duplication
     const objCmaera2 = objManager.duplicateObj(objCamera);
     userInputHandler.setMovementTarget(objCamera);
 
-    userInputHandler.attachAllDefaultHandlers(canvas1GlDrawer.getCanvas())
-    camera.setCameraAttrDefault1(); //Set the camera
-    //Testing following target for camera
-    camera.setTargetObj(objCamera);
+    userInputHandler.attachAllDefaultHandlers(canvas1GlDrawer.getCanvas());
+    camera.setTargetObj(objCamera);     //Testing following target for camera
 
+    userInputHandler.setCameraMode(cameraMode); //Test setting first person camera
 
     //draw with starting time 0
     let then = 0;
@@ -35,6 +36,9 @@ function main() {
         time *= 0.001; //convert to seconds
         // let deltaTime = time - then;  // Subtract the previous time from the current time
         then = time; //Remember the current time for the next frame.
+
+        if(cameraMode === cameraModesEnum.firstPerson)
+            userInputHandler.updateFirstPersonforCamera();
 
         canvas1GlDrawer.preRender()
 

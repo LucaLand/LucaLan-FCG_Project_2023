@@ -77,6 +77,10 @@ let ObjMesh = function (id, name, mesh, meshData){
         objRotation.z = z;
     }
 
+    this.getRotation = function () {
+        return [objRotation.x, objRotation.y, objRotation.z];
+    }
+
     this.setScale = function (x, y, z){
         objScale.x = x;
         objScale.y = y;
