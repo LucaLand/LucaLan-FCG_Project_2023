@@ -1,26 +1,30 @@
 "use strict";
 
-const programs ={
-    SkyBoxProgramInfo: null,
-    ObjsProgramInfo: null,
-}
+// const programs ={
+//     SkyBoxProgramInfo: null,
+//     ObjsProgramInfo: null,
+// }
 
-let GLDrawer = function (canvasId){
+const GLDrawer = function (canvasId){
     let canvas = document.getElementById(canvasId);
     this.gl = canvas.getContext("webgl");
     if (!this.gl) {
         console.log("!!!NO GL for canvas:"+canvasId);
     }
 
-    // setup GLSL programs and lookup locations
-    programs.SkyBoxProgramInfo = webglUtils.createProgramInfo(this.gl, ["skybox-vertex-shader", "skybox-fragment-shader"]);
-    programs.ObjsProgramInfo =  webglUtils.createProgramInfo(this.gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+    let programs = {
+        SkyBoxProgramInfo: webglUtils.createProgramInfo(this.gl, ["skybox-vertex-shader", "skybox-fragment-shader"]),
+        ObjsProgramInfo: webglUtils.createProgramInfo(this.gl, ["3d-vertex-shader", "3d-fragment-shader"]),
+    }
 
     this.camera = new CameraManager(this.gl);
 
     this.ambientLight = [0.2,0.2,0.2];
     this.colorLight = [1.0,1.0,1.0];
     this.lightDirection = m4.normalize([-1, 3, 5]);
+
+    this.skybox = new Skybox(this.gl, programs.SkyBoxProgramInfo);
+    this.skybox.loadSkybox();
 
     this.getGL = function (){
         return this.gl;
@@ -197,6 +201,10 @@ let GLDrawer = function (canvasId){
         objMeshList.forEach(objmesh => {
             this.objDraw(objmesh);
         })
+    }
+
+    this.drawSkybox = function (){
+        this.skybox.drawSkybox(this.getCamera());
     }
 
 

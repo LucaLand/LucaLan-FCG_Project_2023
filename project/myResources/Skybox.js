@@ -1,6 +1,6 @@
 "use strict";
-let Skybox = function (gl) {
-    this.skyboxProgramInfo = programs.SkyBoxProgramInfo
+let Skybox = function (gl, SkyBoxProgramInfo) {
+    this.skyboxProgramInfo = SkyBoxProgramInfo;
     this.texture = null;
 
     this.loadSkybox = function(){

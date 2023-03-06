@@ -138,6 +138,10 @@ void main() {
 
 <body>
 <div id="parent_div">
+    <div class="buttonDiv">
+        <button id="buttonVisual" onclick="changeCameraMode()">Prima Persona!</button>
+        <button id="buttonFoto" onclick="foto()" class="invisible">SCATTAAA!</button>
+    </div>
     <canvas width="1500" height="800" id="my_Canvas" class="canvas closed"></canvas>
     <div id="menu-container">
         <div id="menu-button" onclick="toggleMenu()">MENU</div>
@@ -206,6 +210,32 @@ void main() {
 
         canvas2Div.setAttribute("class", canvas2Classes)
     }
+
+    function changeCameraMode(){
+        // console.log("ChangeVisualMode!")
+        main.changeVisualMode();
+        toggleFotoButton();
+    }
+
+    function foto(){
+        console.log("Shooting!");
+        main.foto();
+        toggleCanvas2(true);
+    }
+
+    function toggleFotoButton(){
+        let buttonVisual = document.getElementById("buttonVisual");
+        let buttonFoto = document.getElementById("buttonFoto");
+        let buttonAttrib = buttonFoto.getAttribute("class");
+        if(buttonAttrib === "") {
+            buttonFoto.setAttribute("class", "invisible");
+            buttonVisual.innerText = "Prima Persona!";
+        } else {
+            buttonFoto.setAttribute("class", "");
+            buttonVisual.innerText = "Terza Persona!";
+        }
+    }
+
 </script>
 
 </body>

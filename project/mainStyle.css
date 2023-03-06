@@ -113,3 +113,21 @@ body * {
     top: 10px;
     left: 10px;
 }
+
+button {
+    float: right;
+    width: 80px;
+    height: 30px;
+    margin: 2px;
+}
+
+button.invisible {
+    display: none;
+}
+
+.buttonDiv {
+    position: fixed;
+    top: 4px;
+    right: 4px;
+    width: 200px;
+}
