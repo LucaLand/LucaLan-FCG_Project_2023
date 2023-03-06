@@ -25,7 +25,8 @@ let CameraManager = function (gl){
     this.angle = 0;                 //Angle used for forward direction in First Person mode
     this.polarMode = true;
 
-    let DLimitMax = 10, DLimitMin = 1;
+    let DLimitMax = 15, DLimitMin = 1;
+    let fovLimitMax = 2.2, fovLimitMin = 0.4;
     let lookingAtTargetObj = true;
     let followingObj = true;
     let targetObj = null;
@@ -81,21 +82,18 @@ let CameraManager = function (gl){
     this.computeMatrix();
 
      this.setCameraAttrDefault1 = function (){
-        const camera = this;
-
-        let cameraPosition = [3, 0, 3];
         let up = [0, 1, 0];
-        let target = [0, 0, 0];
         let fieldOfViewRadians = degToRad(60);
 
-        camera.cameraPosition = cameraPosition;
-        camera.up = up;
-        camera.target = target;
-        camera.fieldOfViewRadians = fieldOfViewRadians;
+        this.up = up;
+        this.fieldOfViewRadians = fieldOfViewRadians;
+        this.theta = degToRad(180);
+        this.phi = degToRad(70);
+        this.distance = 6;
+        this.polarMode = true;
+        this.setFollowTargetObj(true);
 
-        this.theta = degToRad(0);
-        this.phi = degToRad(90);
-        camera.computeMatrix(); //Camera Compute Matrix
+        this.computeMatrix(); //Camera Compute Matrix
     }
 
     this.rotateCamera = function (dTheta, dPhi){
@@ -158,6 +156,13 @@ let CameraManager = function (gl){
          let angle = this.angle;
          let multiplier = 1000000000;
          this.targetPosition = [multiplier*Math.sin(angle),0,multiplier*Math.cos(angle)];
+    }
+
+    this.addFov = function (deltaFov) {
+        let fov = this.fieldOfViewRadians;
+        let deltaFovDeg = degToRad(deltaFov);
+         if(fov+deltaFovDeg > fovLimitMin && fov+deltaFovDeg < fovLimitMax)
+            this.fieldOfViewRadians += degToRad(deltaFov);
     }
 
 

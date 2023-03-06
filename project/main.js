@@ -10,7 +10,6 @@ function main() {
     let skybox = new Skybox(canvas1GlDrawer.getGL());
     let objManager = new ObjManager(canvas1GlDrawer.getGL());
     let userInputHandler = new UserInputHandler(camera, canvas1GlDrawer.getCanvas());
-    let cameraMode = cameraModesEnum.firstPerson;
 
     skybox.loadSkybox();
     // const boeing = objManager.loadObj("boeing", "assets/objs/boeing_3.obj");
@@ -25,7 +24,7 @@ function main() {
     userInputHandler.attachAllDefaultHandlers(canvas1GlDrawer.getCanvas());
     camera.setTargetObj(objCamera);     //Testing following target for camera
 
-    userInputHandler.setCameraMode(cameraMode); //Test setting first person camera
+    // userInputHandler.setCameraMode(cameraModesEnum.firstPerson); //Test setting first person camera
 
     //draw with starting time 0
     let then = 0;
@@ -37,7 +36,8 @@ function main() {
         // let deltaTime = time - then;  // Subtract the previous time from the current time
         then = time; //Remember the current time for the next frame.
 
-        if(cameraMode === cameraModesEnum.firstPerson)
+        userInputHandler.refreshCameraMode(userInputHandler.getCameraMode());
+        if(userInputHandler.getCameraMode() === cameraModesEnum.firstPerson)
             userInputHandler.updateFirstPersonforCamera();
 
         canvas1GlDrawer.preRender()

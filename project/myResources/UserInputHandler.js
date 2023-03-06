@@ -17,6 +17,8 @@ const UserInputHandler = function (cam, canvas){
     let drag = false;
     let old = {x:0, y:0};
     let targetObjMesh = null;
+    let cameraMode = cameraModesEnum.thirdPerson;
+    let oldCameraMode = cameraMode;
 
     this.attachDefaultHandler = function (object, eventType){
         console.log("Adding event listener for Obj:" + object +" eType:" + eventType);
@@ -44,13 +46,21 @@ const UserInputHandler = function (cam, canvas){
 
     function handleUserEvent(eventType, e){
         //TODO. Remove and associate directly the handler in addEventListener (in the attach function)
-        eventHandlerArrayMap.forEach(entry => {
-            if(entry.eventName === eventType)
-                entry.eventHandler(e);
-        })
+        if(cameraMode === cameraModesEnum.thirdPerson) {
+            eventHandlerArrayMap.forEach(entry => {
+                if (entry.eventName === eventType)
+                    entry.eventHandler(e);
+            })
+        }else{
+            eventHandlerArrayMapFirstPerson.forEach(entry => {
+                if (entry.eventName === eventType)
+                    entry.eventHandler(e);
+            })
+        }
     }
 
     const mouseDownDefaultHandler = function (e){
+        console.log("mouse Pressed!")
         drag = true;
         old.x = e.pageX;
         old.y = e.pageY;
@@ -82,6 +92,12 @@ const UserInputHandler = function (cam, canvas){
         e.preventDefault();
     }
 
+    const wheelHandlerFirstPerson = function (e){
+        console.log("Wheel DeltaY: " + e.deltaY);
+        camera.addFov(-e.deltaY/100);
+        e.preventDefault();
+    }
+
     const keyDownHandlerMap = function (e){
         if(targetObjMesh !== null) {
             switch (e.code) {
@@ -103,6 +119,11 @@ const UserInputHandler = function (cam, canvas){
                 case "KeyD":
                     targetObjMesh.rotate(0, -5, 0);
                     break;
+                case "KeyV":
+                    if(cameraMode === cameraModesEnum.thirdPerson)
+                        cameraMode = cameraModesEnum.firstPerson;
+                    else
+                        cameraMode = cameraModesEnum.thirdPerson;
             }
         }
         console.log(e);
@@ -116,13 +137,23 @@ const UserInputHandler = function (cam, canvas){
         {eventName: events.onKeyDown, eventHandler: keyDownHandlerMap}
     ]
 
+    const eventHandlerArrayMapFirstPerson = [
+        {eventName: events.onWheel, eventHandler: wheelHandlerFirstPerson},
+        {eventName: events.onKeyDown, eventHandler: keyDownHandlerMap}
+    ]
+
     this.setMovementTarget = function (movementTargetObj){
         targetObjMesh = movementTargetObj;
     }
 
     this.setCameraMode = function (mode){
+        console.log(cameraMode);
+        cameraMode = mode;
         switch (mode) {
             case cameraModesEnum.thirdPerson:
+                camera.setFollowTargetObj(true);
+                camera.up = [0,1,0];
+                camera.polarMode = true;
                 camera.setCameraAttrDefault1();
                 break;
             case cameraModesEnum.firstPerson:
@@ -134,6 +165,10 @@ const UserInputHandler = function (cam, canvas){
         }
     }
 
+    this.getCameraMode = function (){
+        return cameraMode;
+    }
+
     this.updateFirstPersonforCamera = function (){
         camera.setCameraPosition(targetObjMesh.getPosition()[0], targetObjMesh.getPosition()[1], targetObjMesh.getPosition()[2]);
         camera.setAngle(targetObjMesh.getRotation()[1]);
@@ -141,7 +176,16 @@ const UserInputHandler = function (cam, canvas){
         camera.setTargetForward();
     }
 
+    this.refreshCameraMode = function (newCameraMode){
+        if(newCameraMode !== oldCameraMode) {
+            this.setCameraMode(newCameraMode);
+            oldCameraMode = newCameraMode;
+        }
+    }
 
 
+
+
+    this.setCameraMode(cameraMode); //init
 }
 
