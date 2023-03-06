@@ -16,7 +16,7 @@ const Main = function() {
     // const chair = objManager.loadObj("chair", "assets/objs/chair.obj");
 
 
-    const objCamera = objManager.loadObj("camera", "assets/objs/camera.obj")
+    const objCamera = objManager.loadObj("camera", "assets/objs/camera-recalculated-normals.obj")
     //testing duplication
     const objCmaera2 = objManager.duplicateObj(objCamera);
     userInputHandler.setMovementTarget(objCamera);
