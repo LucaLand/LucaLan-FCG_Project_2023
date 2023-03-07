@@ -2,6 +2,7 @@
 
 // const envmapProgramInfo = webglUtils.createProgramInfo(GlDrawer.gl, ["envmap-vertex-shader", "envmap-fragment-shader"]);
 // const program = webglUtils.createProgramFromScripts(GlDrawer.gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+let photo = 0;
 
 const Main = function() {
     // Get A WebGL context
@@ -52,6 +53,15 @@ const Main = function() {
         //Draw all the Geometries loaded
         canvas1GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
 
+        if(photo !== 0 && photo <= 30){
+            console.log("Shooting: " + photo);
+            photo++;
+            if(photo % 30 === 0)
+                drawPhoto();
+        }else{
+            photo = 0;
+        }
+
         requestAnimationFrame(drawScene);
     }
 
@@ -62,11 +72,15 @@ const Main = function() {
             userInputHandler.refreshCameraMode(cameraModesEnum.firstPerson)
     }
 
-    this.foto = function (){
+    function drawPhoto() {
         canvas2GlDrawer.camera = canvas1GlDrawer.camera;
         canvas2GlDrawer.preRender();
         canvas2GlDrawer.drawSkybox();
         canvas2GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
+    }
+
+    this.drawPhoto = function (){
+        drawPhoto();
     }
 
 };
