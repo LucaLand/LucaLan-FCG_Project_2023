@@ -19,6 +19,7 @@ const UserInputHandler = function (cam, canvas){
     let targetObjMesh = null;
     let cameraMode = cameraModesEnum.thirdPerson;
     let oldCameraMode = cameraMode;
+    let angleVertical = 0;
 
     this.attachDefaultHandler = function (object, eventType){
         console.log("Adding event listener for Obj:" + object +" eType:" + eventType);
@@ -86,6 +87,19 @@ const UserInputHandler = function (cam, canvas){
         e.preventDefault();
     }
 
+    const mouseMoveHandlerFirstPerson = function (e){
+        if(drag){
+            let cur = {x: e.pageX, y:e.pageY};   //windowToCanvas(canvas, e.pageX, e.pageY);
+            let dX = -(cur.x-old.x)*2*Math.PI/canvas.width;
+            let dY = -(cur.y-old.y)*2*Math.PI/canvas.height;
+            if(angleVertical+dY <= 1.5 && angleVertical+dY >= -1.5)
+            angleVertical += dY;
+            old.x=cur.x;
+            old.y=cur.y;
+        }
+        e.preventDefault();
+    }
+
     const wheelHandler = function (e){
         console.log("Wheel DeltaY: " + e.deltaY);
         camera.translateCameraDistance(e.deltaY/300)
@@ -139,7 +153,10 @@ const UserInputHandler = function (cam, canvas){
 
     const eventHandlerArrayMapFirstPerson = [
         {eventName: events.onWheel, eventHandler: wheelHandlerFirstPerson},
-        {eventName: events.onKeyDown, eventHandler: keyDownHandlerMap}
+        {eventName: events.onKeyDown, eventHandler: keyDownHandlerMap},
+        {eventName: events.onMouseDown, eventHandler: mouseDownDefaultHandler},
+        {eventName: events.onMouseUp, eventHandler: mouseUpDefaultHandler},
+        {eventName: events.onMouseMove, eventHandler: mouseMoveHandlerFirstPerson}
     ]
 
     this.setMovementTarget = function (movementTargetObj){
@@ -171,7 +188,7 @@ const UserInputHandler = function (cam, canvas){
 
     this.updateFirstPersonforCamera = function (){
         camera.setCameraPosition(targetObjMesh.getPosition()[0], targetObjMesh.getPosition()[1], targetObjMesh.getPosition()[2]);
-        camera.setAngle(targetObjMesh.getRotation()[1]);
+        camera.setAngle(targetObjMesh.getRotation()[1], angleVertical);
         camera.move(directions.Forward, 1);
         camera.setTargetForward();
     }

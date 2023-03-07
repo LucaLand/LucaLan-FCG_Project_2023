@@ -23,6 +23,7 @@ let CameraManager = function (gl){
 
     this.cameraPosition = [5,0,5];  //Non viene usato con le polar cords
     this.angle = 0;                 //Angle used for forward direction in First Person mode
+    this.angleVertical = 0;
     this.polarMode = true;
 
     let DLimitMax = 15, DLimitMin = 1;
@@ -154,14 +155,15 @@ let CameraManager = function (gl){
         }
     }
 
-    this.setAngle = function (angle){
+    this.setAngle = function (angle, angleVertical){
          this.angle = angle;
+         this.angleVertical = angleVertical;
     }
 
     this.setTargetForward = function (){
-         let angle = this.angle;
+         let angle = this.angle, angleVertical = this.angleVertical;
          let multiplier = 1000000000;
-         this.targetPosition = [multiplier*Math.sin(angle),0,multiplier*Math.cos(angle)];
+         this.targetPosition = [multiplier*Math.sin(angle)*Math.cos(angleVertical),multiplier*Math.sin(angleVertical),multiplier*Math.cos(angleVertical)];
     }
 
     this.addFov = function (deltaFov) {
