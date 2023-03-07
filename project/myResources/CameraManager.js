@@ -52,9 +52,15 @@ let CameraManager = function (gl){
         this.cameraPosition =[(D * Math.sin(this.theta) * Math.sin(this.phi)) + c[0],
             (D * Math.cos(this.phi)) + c[1],
             (D * Math.cos(this.theta) * Math.sin(this.phi)) + c[2]];
+
         //To go upside down (don't make camera twist in the pole)
-        this.up = [0, Math.sin(this.phi), 0];
-        //this.computeMatrix();
+        let yUp = Math.sin(this.phi);
+        if(yUp <= 0.01 && yUp >= 0)
+            yUp = 0.01;
+        else if(yUp >= -0.01 && yUp <= 0)
+            yUp = -0.01;
+
+        this.up = [0, yUp, 0];
     }
 
      this.computeMatrix = function (){
