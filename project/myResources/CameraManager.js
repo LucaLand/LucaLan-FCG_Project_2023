@@ -162,7 +162,7 @@ let CameraManager = function (gl){
     this.setTargetForward = function (){
          let angle = this.angle, angleVertical = this.angleVertical;
          let multiplier = 1000000000;
-         this.targetPosition = [multiplier*Math.sin(angle)*Math.cos(angleVertical),multiplier*Math.sin(angleVertical),multiplier*Math.cos(angleVertical)];
+         this.targetPosition = [multiplier*Math.sin(angle)*Math.cos(angleVertical),multiplier*Math.sin(angleVertical),multiplier*Math.cos(angle)*Math.cos(angleVertical)];
     }
 
     this.addFov = function (deltaFov) {
