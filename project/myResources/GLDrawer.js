@@ -48,8 +48,6 @@ const GLDrawer = function (canvasId){
     }
 
     this.updateObjProgramUniforms = function (){
-        this.camera.computeMatrix();
-
         objProgramUniforms = {
             u_ambientLight: this.ambientLight,
             u_colorLight: this.colorLight,

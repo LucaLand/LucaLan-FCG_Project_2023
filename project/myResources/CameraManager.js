@@ -65,11 +65,7 @@ let CameraManager = function (gl){
     }
 
      this.computeMatrix = function (){
-         if(this.polarMode)
-            this.computeCameraMatrixWithPolarCords();
-         // Compute the projection matrix
-         let aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-         this.projectionMatrix = m4.perspective(this.fieldOfViewRadians, aspect, this.zmin, this.zfar);
+
 
          //Setting target on obj
          if(lookingAtTargetObj && targetObj !== null){
@@ -77,6 +73,11 @@ let CameraManager = function (gl){
              if(followingObj)
                  cameraPositionCenter = targetObj.getPosition();
          }
+         if(this.polarMode)
+             this.computeCameraMatrixWithPolarCords();
+         // Compute the projection matrix
+         let aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+         this.projectionMatrix = m4.perspective(this.fieldOfViewRadians, aspect, this.zmin, this.zfar);
 
          // Compute the camera's matrix using look at.
          this.cameraMatrix = m4.lookAt(this.cameraPosition, this.targetPosition, this.up);
@@ -85,7 +86,7 @@ let CameraManager = function (gl){
          this.viewMatrix = m4.inverse(this.cameraMatrix);
      }
 
-     //Computing Matrix first time this is created
+    //Computing Matrix first time this is created
     this.computeMatrix();
 
      this.setCameraAttrDefault1 = function (){
@@ -99,8 +100,6 @@ let CameraManager = function (gl){
         this.distance = 6;
         this.polarMode = true;
         this.setFollowTargetObj(true);
-
-        this.computeMatrix(); //Camera Compute Matrix
     }
 
     this.rotateCamera = function (dTheta, dPhi){
@@ -113,23 +112,23 @@ let CameraManager = function (gl){
         if((d + deltaDistance) < DLimitMax && (d + deltaDistance) > DLimitMin)
             this.distance += deltaDistance;
         console.log("Camera Distance: " + this.distance)
-        this.computeMatrix();
+        // this.computeMatrix();
     }
 
     this.setPolarPosition = function(degTheta, degPhi){
          this.theta = degToRad(degTheta);
          this.phi = degToRad(degPhi);
-         this.computeMatrix();
+         // this.computeMatrix();
     }
 
     this.setCameraDistance = function (d){
          this.distance = d;
-         this.computeMatrix();
+         // this.computeMatrix();
     }
 
     this.setCameraPosition = function(x, y, z){
         this.cameraPosition = [x,y,z]
-        this.computeMatrix();
+        //this.computeMatrix();
     }
 
     this.translate = function (dx, dy, dz){
@@ -138,7 +137,7 @@ let CameraManager = function (gl){
         this.cameraPosition[0] = x;
         this.cameraPosition[1] = y;
         this.cameraPosition[2] = z;
-        this.computeMatrix();
+        //this.computeMatrix();
      }
 
     this.move = function (directionAxis, step){

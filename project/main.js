@@ -35,23 +35,11 @@ const Main = function() {
     function drawScene(time) {
         //console.log("draw:" + time);
         time *= 0.001; //convert to seconds
-        // let deltaTime = time - then;  // Subtract the previous time from the current time
-        then = time; //Remember the current time for the next frame.
+        let deltaTime = time - then;  // Subtract the previous time from the current time
 
         userInputHandler.refreshCameraMode(userInputHandler.getCameraMode());
         if (userInputHandler.getCameraMode() === cameraModesEnum.firstPerson)
             userInputHandler.updateFirstPersonforCamera();
-
-        canvas1GlDrawer.preRender()
-
-        //Draw Skybox
-        canvas1GlDrawer.drawSkybox();
-
-        //Camera Movement test
-        //objCamera.translate(0.01, 0,0);
-
-        //Draw all the Geometries loaded
-        canvas1GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
 
         if(photo !== 0 && photo <= 30){
             console.log("Shooting: " + photo);
@@ -62,7 +50,28 @@ const Main = function() {
             photo = 0;
         }
 
+        // If more than 0 result in laggin behaviour
+        if(deltaTime >=0) {
+            render(time);
+        }
+
         requestAnimationFrame(drawScene);
+    }
+
+    function render(time){
+        then = time; //Remember the current time for the next frame.
+
+        canvas1GlDrawer.getCamera().computeMatrix();
+        canvas1GlDrawer.preRender()
+
+        //Draw Skybox
+        canvas1GlDrawer.drawSkybox();
+
+        //Camera Movement test
+        //objCamera.translate(0.01, 0,0);
+
+        //Draw all the Geometries loaded
+        canvas1GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
     }
 
     this.changeVisualMode = function (){
