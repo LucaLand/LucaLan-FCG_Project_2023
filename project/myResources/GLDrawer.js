@@ -25,6 +25,7 @@ const GLDrawer = function (canvasId){
 
     this.skybox = new Skybox(this.gl, programs.SkyBoxProgramInfo);
     this.skybox.loadSkybox();
+    let cullFace = true;
 
     this.getGL = function (){
         return this.gl;
@@ -36,6 +37,10 @@ const GLDrawer = function (canvasId){
 
     this.getCanvas = function (){
         return canvas;
+    }
+
+    this.enableCullFace = function (bool){
+        cullFace = bool;
     }
 
     let objProgramUniforms = {
@@ -150,7 +155,10 @@ const GLDrawer = function (canvasId){
         gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 
         //Optimizing performance with Cull face (try to remove and see what happens)
-        gl.enable(this.gl.CULL_FACE);
+        if(cullFace)
+            gl.enable(this.gl.CULL_FACE);
+
+        //gl.cullFace(this.gl.FRONT_AND_BACK);
         gl.enable(this.gl.DEPTH_TEST);
 
         // Clear the canvas AND the depth buffer.
