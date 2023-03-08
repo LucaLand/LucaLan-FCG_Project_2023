@@ -155,9 +155,7 @@ const UserInputHandler = function (cam, canvas){
                     targetObjMesh.rotate(0, -5, 0);
                     break;
                 case "KeyV":
-                    cameraMode++;
-                    if(cameraMode >= 4)
-                        cameraMode = 0;
+                    changeCameraMode();
                     break;
             }
         }
@@ -180,15 +178,13 @@ const UserInputHandler = function (cam, canvas){
                     camera.move(directions.Left, step);
                     break;
                 case "KeyA":
-                    camera.rotate(0, 5, 0);
+                    angle += degToRad(3);
                     break;
                 case "KeyD":
-                    camera.rotate(0, -5, 0);
+                    angle += degToRad(-3);
                     break;
                 case "KeyV":
-                    cameraMode++;
-                    if(cameraMode >= 4)
-                        cameraMode = 0;
+                    changeCameraMode();
                     break;
             }
         }
@@ -223,7 +219,7 @@ const UserInputHandler = function (cam, canvas){
         targetObjMesh = movementTargetObj;
     }
 
-    this.setCameraMode = function (mode){
+    function setCameraMode(mode){
         console.log(cameraMode);
         cameraMode = mode;
         switch (mode) {
@@ -244,6 +240,21 @@ const UserInputHandler = function (cam, canvas){
                 camera.setTargetForward();
                 break;
         }
+    }
+
+    this.setCameraMode = function (mode){
+       setCameraMode(mode);
+    }
+
+    function changeCameraMode(){
+        cameraMode++;
+        if(cameraMode >= 4)
+            cameraMode = 0;
+        setCameraMode(cameraMode);
+    }
+
+    this.changeCameraMode = function (){
+        changeCameraMode();
     }
 
     this.getCameraMode = function (){
