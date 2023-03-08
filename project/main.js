@@ -38,8 +38,14 @@ const Main = function() {
         let deltaTime = time - then;  // Subtract the previous time from the current time
 
         userInputHandler.refreshCameraMode(userInputHandler.getCameraMode());
-        if (userInputHandler.getCameraMode() === cameraModesEnum.firstPerson)
-            userInputHandler.updateFirstPersonforCamera();
+        switch (userInputHandler.getCameraMode()){
+            case cameraModesEnum.firstPerson:
+                userInputHandler.updateFirstPersonforCamera();
+                break;
+            case cameraModesEnum.freeCamera:
+                userInputHandler.updateFreeCamera();
+                break;
+        }
 
         if(photo !== 0 && photo <= 30){
             console.log("Shooting: " + photo);

@@ -2,7 +2,8 @@
 
 const cameraModesEnum = {
     thirdPerson: 1,
-    firstPerson: 2
+    firstPerson: 2,
+    freeCamera: 3
 }
 
 let CameraManager = function (gl){
@@ -141,14 +142,16 @@ let CameraManager = function (gl){
      }
 
     this.move = function (directionAxis, step){
-         let angle = this.angle;
+        let angle = this.angle;
+        let angleVertical = this.angleVertical;
         let dxf = step * Math.sin(angle);
         let dzf = step * Math.cos(angle);
         let dxr = step * Math.sin(angle + degToRad(90));
         let dzr = step * Math.cos(angle + degToRad(90));
+        let dyf = step * Math.sin(angleVertical);
         switch (directionAxis){
-            case directions.Forward: this.translate(dxf, 0, dzf); break;
-            case directions.Backward: this.translate(-dxf, 0, -dzf); break;
+            case directions.Forward: this.translate(dxf, dyf, dzf); break;
+            case directions.Backward: this.translate(-dxf, -dyf, -dzf); break;
             case directions.Right: this.translate(-dxr, 0, -dzr); break;
             case directions.Left: this.translate(dxr, 0, dzr); break;
         }
