@@ -232,7 +232,6 @@ const UserInputHandler = function (cam, canvas){
                 camera.polarMode = false;
                 camera.setFollowTargetObj(false);
                 camera.up = [0,1,0];
-                this.updateFirstPersonforCamera();
                 break;
             case cameraModesEnum.freeCamera:
                 camera.polarMode = false;
@@ -249,7 +248,7 @@ const UserInputHandler = function (cam, canvas){
     function changeCameraMode(){
         cameraMode++;
         if(cameraMode >= 4)
-            cameraMode = 0;
+            cameraMode = 1;
         setCameraMode(cameraMode);
     }
 
