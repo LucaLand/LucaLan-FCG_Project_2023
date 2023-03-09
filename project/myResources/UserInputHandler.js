@@ -264,6 +264,7 @@ const UserInputHandler = function (cam, canvas){
         camera.setCameraPosition(targetObjMesh.getPosition()[0], targetObjMesh.getPosition()[1], targetObjMesh.getPosition()[2]);
         angle = targetObjMesh.getRotation()[1];
         camera.setAngle(angle, angleVertical);
+        targetObjMesh.setRotation(-angleVertical, angle, 0);
         camera.move(directions.Forward, 1);
         camera.setTargetForward();
     }
