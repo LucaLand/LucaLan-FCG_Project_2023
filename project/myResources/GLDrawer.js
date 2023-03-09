@@ -24,7 +24,6 @@ const GLDrawer = function (canvasId){
     this.lightDirection = m4.normalize([-1, 3, 5]);
 
     this.skybox = new Skybox(this.gl, programs.SkyBoxProgramInfo);
-    this.skybox.loadSkybox();
     let cullFace = true;
 
     this.getGL = function (){
@@ -212,6 +211,8 @@ const GLDrawer = function (canvasId){
     this.drawSkybox = function (){
         this.skybox.drawSkybox(this.getCamera());
     }
+
+
 
 
 }

@@ -65,6 +65,8 @@ let Skybox = function (gl, SkyBoxProgramInfo) {
         this.texture = texture;
         return texture;
     }
+    //Loading the Skybox textures when created
+    this.loadSkybox();
 
     function createXYQuadVertices() {
         let xOffset = 0;
