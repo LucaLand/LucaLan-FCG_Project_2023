@@ -246,6 +246,9 @@ const UserInputHandler = function (cam, canvas){
     }
 
     function changeCameraMode(){
+        resetAngleVertical();
+        targetObjMesh.setRotation(0, targetObjMesh.getRotation()[1], 0);
+
         cameraMode++;
         if(cameraMode >= 4)
             cameraMode = 1;
@@ -281,7 +284,7 @@ const UserInputHandler = function (cam, canvas){
         }
     }
 
-    this.resetAngle = function (){
+    function resetAngleVertical() {
         angleVertical = 0;
     }
 
