@@ -8,14 +8,11 @@ const Main = function() {
     // Get A WebGL context
     let canvas1GlDrawer = new GLDrawer("my_Canvas");
     let camera = canvas1GlDrawer.getCamera();
-    let objManager = new ObjManager(canvas1GlDrawer.getGL());
+    let objManager = new ObjManager();
     let userInputHandler = new UserInputHandler(camera, canvas1GlDrawer.getCanvas());
 
     let canvas2GlDrawer = new GLDrawer("canvas-2");
     canvas2GlDrawer.enableCullFace(false);
-
-    // const boeing = objManager.loadObj("boeing", "assets/objs/boeing_3.obj");
-    // const chair = objManager.loadObj("chair", "assets/objs/chair.obj");
 
     //CREAZIONE SCENA
     let scale= 50;
@@ -36,19 +33,14 @@ const Main = function() {
     building_04.setScale(scale*5, scale*5, scale*5);
     building_04.setPosition(-40, scale/2, -30);
 
-
+    //Camera OBJ
     const objCamera = objManager.loadObj("camera", "assets/objs/DigitalCamera_v3_L3.123c1cb807d5-2d9f-49cf-a1e4-b466a061bb87/10818_DigitalCamera_v2.obj");
     objCamera.setPosition(0, 1, 0);
 
-    //testing duplication
-    // const objCmaera2 = objManager.duplicateObj(objCamera);
-
-
+    //USER INPUTS Handlers
     userInputHandler.setMovementTarget(objCamera);
     userInputHandler.attachAllDefaultHandlers(canvas1GlDrawer.getCanvas());
     camera.setTargetObj(objCamera);     //Testing following target for camera
-
-    // userInputHandler.setCameraMode(cameraModesEnum.firstPerson); //Test setting first person camera
 
     //draw with starting time 0
     let then = 0;
@@ -60,7 +52,7 @@ const Main = function() {
         time *= 0.001; //convert to seconds
         let deltaTime = time - then;  // Subtract the previous time from the current time
 
-        userInputHandler.refreshCameraMode(userInputHandler.getCameraMode());
+        toggleVisualButton();
         switch (userInputHandler.getCameraMode()){
             case cameraModesEnum.firstPerson:
                 userInputHandler.updateFirstPersonforCamera();
@@ -91,27 +83,22 @@ const Main = function() {
         then = time; //Remember the current time for the next frame.
 
         canvas1GlDrawer.getCamera().computeMatrix();
-        canvas1GlDrawer.preRender()
+
+        canvas1GlDrawer.preRender();
 
         //Draw Skybox
         canvas1GlDrawer.drawSkybox();
-
-        //Camera Movement test
-        //objCamera.translate(0.01, 0,0);
 
         //Draw all the Geometries loaded
         canvas1GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
     }
 
     this.changeVisualMode = function (){
-        if(userInputHandler.getCameraMode() === cameraModesEnum.firstPerson)
-            userInputHandler.refreshCameraMode(cameraModesEnum.thirdPerson)
-        else
-            userInputHandler.refreshCameraMode(cameraModesEnum.firstPerson)
+        userInputHandler.changeCameraMode();
     }
 
     function drawPhoto() {
-        canvas2GlDrawer.camera = canvas1GlDrawer.camera;
+        canvas2GlDrawer.camera = canvas1GlDrawer.getCamera();
         canvas2GlDrawer.preRender();
         canvas2GlDrawer.drawSkybox();
         canvas2GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
@@ -119,6 +106,35 @@ const Main = function() {
 
     this.drawPhoto = function (){
         drawPhoto();
+    }
+
+    this.getCameraMode = function (){
+        return userInputHandler.getCameraMode();
+    }
+
+    function toggleVisualButton(){
+        let buttonVisual = document.getElementById("buttonVisual");
+        switch (userInputHandler.getCameraMode()) {
+            case cameraModesEnum.thirdPerson:
+                buttonVisual.innerText = "Terza Persona!";
+                break;
+            case cameraModesEnum.firstPerson:
+                buttonVisual.innerText = "Prima Persona!";
+                break;
+            case cameraModesEnum.freeCamera:
+                buttonVisual.innerText = "Camera Libera!";
+                break;
+        }
+        toggleFotoButton();
+    }
+
+    function toggleFotoButton(){
+        let buttonFoto = document.getElementById("buttonFoto");
+        if(userInputHandler.getCameraMode() === cameraModesEnum.firstPerson) {
+            buttonFoto.setAttribute("class", "");
+        } else {
+            buttonFoto.setAttribute("class", "invisible");
+        }
     }
 
 };

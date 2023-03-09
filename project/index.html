@@ -142,7 +142,7 @@ void main() {
         <button id="buttonVisual" onclick="changeCameraMode()">Prima Persona!</button>
         <button id="buttonFoto" onclick="foto()" class="invisible">SCATTAAA!</button>
     </div>
-    <canvas width="1500" height="800" id="my_Canvas" class="canvas closed"></canvas>
+    <canvas width="800" height="800" id="my_Canvas" class="canvas closed"></canvas>
     <div id="menu-container">
         <div id="menu-button" onclick="toggleMenu()">MENU</div>
         <div id="ui-container"></div>
@@ -150,7 +150,7 @@ void main() {
     <div id="canvas-2-div" class="closed">
         <span id="canvas-2-text-foto" hidden>Foto</span>
         <span id="canvas-2-close" onclick="toggleCanvas2(false)" hidden>Close X</span>
-        <canvas width="700" height="700" id="canvas-2" class="canvas closed" onclick="toggleCanvas2(true)"></canvas>
+        <canvas width="2000" height="2000" id="canvas-2" class="canvas closed" onclick="toggleCanvas2(true)"></canvas>
     </div>
 </div>
 
@@ -197,7 +197,7 @@ void main() {
         let fotoText = canvas2Div.children.item(0)
         let canvas2Classes;
 
-        // let closeButtonVisbility, fotoTextVisibility;
+        //let closeButtonVisbility, fotoTextVisibility;
         if(bool){
             canvas2Classes = "opened"
             closeButton.removeAttribute("hidden")
@@ -212,9 +212,7 @@ void main() {
     }
 
     function changeCameraMode(){
-        // console.log("ChangeVisualMode!")
         main.changeVisualMode();
-        toggleFotoButton();
     }
 
     function foto(){
@@ -222,19 +220,6 @@ void main() {
         photo = 1;
         main.drawPhoto();
         toggleCanvas2(true);
-    }
-
-    function toggleFotoButton(){
-        let buttonVisual = document.getElementById("buttonVisual");
-        let buttonFoto = document.getElementById("buttonFoto");
-        let buttonAttrib = buttonFoto.getAttribute("class");
-        if(buttonAttrib === "") {
-            buttonFoto.setAttribute("class", "invisible");
-            buttonVisual.innerText = "Prima Persona!";
-        } else {
-            buttonFoto.setAttribute("class", "");
-            buttonVisual.innerText = "Terza Persona!";
-        }
     }
 
 </script>
