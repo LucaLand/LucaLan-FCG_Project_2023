@@ -19,9 +19,7 @@ const GLDrawer = function (canvasId){
 
     this.camera = new CameraManager(this.gl);
 
-    this.ambientLight = [0.2,0.2,0.2];
-    this.colorLight = [1.0,1.0,1.0];
-    this.lightDirection = m4.normalize([-1, 3, 5]);
+    let light = new Light();
 
     this.skybox = new Skybox(this.gl, programs.SkyBoxProgramInfo);
     let cullFace = true;
@@ -42,10 +40,14 @@ const GLDrawer = function (canvasId){
         cullFace = bool;
     }
 
+    this.setLight = function (newLight){
+        light = newLight;
+    }
+
     let objProgramUniforms = {
-        u_ambientLight: this.ambientLight,
-        u_colorLight: this.colorLight,
-        u_lightDirection: this.lightDirection,
+        u_ambientLight: light.getAmbientLight(),
+        u_colorLight: light.getDirectionalLightColor(),
+        u_lightDirection: light.getLightDirection(),
         u_view: this.camera.viewMatrix,
         u_projection: this.camera.projectionMatrix,
         u_viewWorldPosition: this.camera.cameraPosition
@@ -53,9 +55,9 @@ const GLDrawer = function (canvasId){
 
     this.updateObjProgramUniforms = function (){
         objProgramUniforms = {
-            u_ambientLight: this.ambientLight,
-            u_colorLight: this.colorLight,
-            u_lightDirection: this.lightDirection,
+            u_ambientLight: light.getAmbientLight(),
+            u_colorLight: light.getDirectionalLightColor(),
+            u_lightDirection: light.getLightDirection(),
             u_view: this.camera.viewMatrix,
             u_projection: this.camera.projectionMatrix,
             u_viewWorldPosition: this.camera.cameraPosition
