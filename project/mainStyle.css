@@ -78,13 +78,15 @@ body * {
     writing-mode: vertical-lr;
     text-orientation: upright;
     display: block;
+    float: left;
 }
 #ui-container {
     transition: 1s;
+    float: left;
 }
 
 #ui-container.opened {
-    width: 250px;
+    width: 230px;
     border: 2px solid red;
     height: 100%;
 }
@@ -92,6 +94,14 @@ body * {
 #ui-container.closed {
     width: 0;
     height: 100%;
+}
+
+#ui-container.closed * {
+    display: none;
+}
+
+#ui-container * {
+    margin: 30px 1vw;
 }
 
 #my_Canvas.opened {
