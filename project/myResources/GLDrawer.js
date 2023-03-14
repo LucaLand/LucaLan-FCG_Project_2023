@@ -44,6 +44,10 @@ const GLDrawer = function (canvasId){
         light = newLight;
     }
 
+    this.getLight = function (){
+        return light;
+    }
+
     let objProgramUniforms = {
         u_ambientLight: light.getAmbientLight(),
         u_colorLight: light.getDirectionalLightColor(),

@@ -125,6 +125,7 @@ const Main = function() {
 
     function drawPhoto() {
         canvas2GlDrawer.camera = canvas1GlDrawer.getCamera();
+        canvas2GlDrawer.setLight(canvas1GlDrawer.getLight());
         canvas2GlDrawer.preRender();
         canvas2GlDrawer.drawSkybox();
         canvas2GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
