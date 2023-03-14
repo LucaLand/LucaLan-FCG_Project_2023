@@ -23,11 +23,11 @@ let Skybox = function (gl, SkyBoxProgramInfo) {
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-                url: 'assets/city-sky/bologna-divided-1-z1.jpg',
+                url: 'assets/city-sky/bologna-divided-1-y1.jpg',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-                url: 'assets/city-sky/bologna-divided-1-z2.jpg',
+                url: 'assets/city-sky/bologna-divided-1-y2.jpg',
             },
         ];
 
