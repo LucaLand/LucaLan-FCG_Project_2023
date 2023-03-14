@@ -42,6 +42,12 @@ const Main = function() {
     userInputHandler.attachAllDefaultHandlers(canvas1GlDrawer.getCanvas());
     camera.setTargetObj(objCamera);     //Testing following target for camera
 
+
+    //LIGHT TEST
+    let light = new Light();
+    canvas1GlDrawer.setLight(light);
+    let lightDir = 1;
+
     //draw with starting time 0
     let then = 0;
     drawScene(0);
@@ -52,15 +58,10 @@ const Main = function() {
         time *= 0.001; //convert to seconds
         let deltaTime = time - then;  // Subtract the previous time from the current time
 
-        toggleVisualButton();
-        switch (userInputHandler.getCameraMode()){
-            case cameraModesEnum.firstPerson:
-                userInputHandler.updateFirstPersonforCamera();
-                break;
-            case cameraModesEnum.freeCamera:
-                userInputHandler.updateFreeCamera();
-                break;
-        }
+        pullSettingsFromUI();
+        handleSettings();
+
+        updateVisualAndUI();
 
         if(photo !== 0 && photo <= 30){
             console.log("Shooting: " + photo);
@@ -71,10 +72,12 @@ const Main = function() {
             photo = 0;
         }
 
-        // If more than 0 result in laggin behaviour
+        // If more than 0 result in laggin behaviour (tryed to maximize performance with deltaTime)
         if(deltaTime >=0) {
             render(time);
         }
+
+        light.setLightDirection(lightDir, 10, 4)
 
         requestAnimationFrame(drawScene);
     }
@@ -91,6 +94,29 @@ const Main = function() {
 
         //Draw all the Geometries loaded
         canvas1GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
+    }
+
+    function handleSettings(settings) {
+        let time = Settings.time;
+        if(time < 50 && time >= 0){
+            lightDir = time * 3 - 25 * 3;
+        }else if(time < 0){
+            Settings.time = 0;
+        }else if(time <= 100 && time >= 50){
+            //TODO. night = true;
+        }else if(time > 100){
+            Settings.time = 100
+        }
+    }
+
+    function pushSettingsInUI(){
+
+    }
+
+    function pullSettingsFromUI(){
+        let inputTime = document.getElementById("inputTime");
+        console.log(inputTime.getAttribute("value"))
+        Settings.time = inputTime.value;
     }
 
     this.changeVisualMode = function (){
@@ -112,7 +138,7 @@ const Main = function() {
         return userInputHandler.getCameraMode();
     }
 
-    function toggleVisualButton(){
+    function updateVisualAndUI(){
         let buttonVisual = document.getElementById("buttonVisual");
         switch (userInputHandler.getCameraMode()) {
             case cameraModesEnum.thirdPerson:
@@ -120,9 +146,11 @@ const Main = function() {
                 break;
             case cameraModesEnum.firstPerson:
                 buttonVisual.innerText = "Prima Persona!";
+                userInputHandler.updateFirstPersonforCamera();
                 break;
             case cameraModesEnum.freeCamera:
                 buttonVisual.innerText = "Camera Libera!";
+                userInputHandler.updateFreeCamera();
                 break;
         }
         toggleFotoButton();
