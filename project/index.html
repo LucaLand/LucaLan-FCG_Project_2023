@@ -235,7 +235,7 @@ void main() {
 
   // the 'r' channel has the depth values
   float projectedDepth = texture2D(u_projectedTexture, projectedTexcoord.xy).r;
-  float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.5 : 1.0;
+  float shadowLight = (projectedDepth <= currentDepth) ? 0.4 : 0.5;
 
   vec4 texColor = texture2D(diffuseMap, v_texcoord) * u_colorLight;
   gl_FragColor = vec4(

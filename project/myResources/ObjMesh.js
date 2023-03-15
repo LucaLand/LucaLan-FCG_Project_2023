@@ -45,7 +45,7 @@ let ObjMesh = function (id, name, mesh, meshData){
             emissive: this.emissive,
             shininess: this.shininess,
             opacity: this.opacity,
-            u_color: [0,0,1,1]
+            u_color: [0.0, 0.0, 1.0, 1.0]
         }
         return objUniforms;
     }

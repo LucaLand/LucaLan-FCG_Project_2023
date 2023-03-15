@@ -29,8 +29,9 @@ const GLDrawer = function (canvasId){
     let shadows = true;
     this.skybox = new Skybox(gl, programs.SkyBoxProgramInfo);
     let cullFace = true;
+    const depthTextureObj = createDepthTexture(gl);
 
-    let objRenderingProgramInfo = programs.ObjsProgramInfo;
+    let objRenderingProgramInfo = programs.MyProgramInfo;
 
     this.getGL = function (){
         return gl;
@@ -71,12 +72,12 @@ const GLDrawer = function (canvasId){
 
     let sunProgramUniforms = {
         u_ambientLight: light.getAmbientLight(),
-        u_colorLight: light.getDirectionalLightColor(),
+        u_colorLight: light.getLightColorVec4(),
         u_lightDirection: light.getLightDirection(),
         u_view: camera.viewMatrix,
         u_projection: camera.projectionMatrix,
         u_viewWorldPosition: camera.cameraPosition,
-        u_projectedTexture: createDepthTexture(gl).depthTexture,
+        u_projectedTexture: depthTextureObj.depthTexture,
         u_innerLimit: light.innerLimit,
         u_outerLimit: light.outerLimit
     }
@@ -96,10 +97,10 @@ const GLDrawer = function (canvasId){
             u_projection: projectionMatrix,
             u_textureMatrix: textureMatrix,
             u_ambientLight: light.getAmbientLight(),
-            u_colorLight: light.getDirectionalLightColor(),
+            u_colorLight: light.getLightColorVec4(),
             u_lightDirection: light.getLightDirection(),
             u_viewWorldPosition: camera.cameraPosition,
-            u_projectedTexture: createDepthTexture(gl).depthTexture,
+            u_projectedTexture: depthTextureObj.depthTexture,
             u_innerLimit: light.innerLimit,
             u_outerLimit: light.outerLimit
         }
@@ -169,18 +170,13 @@ const GLDrawer = function (canvasId){
         gl.vertexAttribPointer(texcoordLocation, size, type, normalize, stride, offset);
     }
 
-    this.objDraw = function (objMesh){
-        if(shadows){
-            let lightProjectionMatrix = light.computeLightWorldMatrix();
-            drawShadows(gl, objMesh, lightProjectionMatrix);
-        }
-
+    this.objDraw = function (objMesh, programInfo = objRenderingProgramInfo){
         if(objMesh.textureImage !== null)
             this.loadObjTextureIntoBuffer(objMesh.textureImage);
         else
             this.loadDefaultTexture();
 
-        drawObj(gl, objMesh, objRenderingProgramInfo);
+        drawObj(gl, objMesh, programInfo);
     }
 
     function drawObj(gl, objMesh, programInfo){
@@ -211,40 +207,8 @@ const GLDrawer = function (canvasId){
         gl.drawArrays(gl.TRIANGLES, 0, objMesh.numVertices);
     }
 
-    function drawShadows(gl, objMesh, lightWorldMatrix) {
-        // first draw from the POV of the light
-        lightWorldMatrix = m4.lookAt(
-            light.getLightPosition(),          // position
-            light.getLightDirection(), // target
-            [0, 1, 0],                 // up
-        );
-        const lightProjectionMatrix = light.computeLightWorldMatrix();
-
-        const depthTextureObj = createDepthTexture(gl);
-
-        // draw to the depth texture
-        gl.bindFramebuffer(gl.FRAMEBUFFER, depthTextureObj.depthFrameBuffer);
-        gl.viewport(0, 0, depthTextureObj.depthTextureSize, depthTextureObj.depthTextureSize);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+    function drawShadows(gl, objMesh) {
         drawObj(gl, objMesh, programs.ColorProgramInfo);
-
-        // now draw scene to the canvas projecting the depth texture into the scene
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        gl.clearColor(0, 0, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        let textureMatrix = m4.identity();
-        textureMatrix = m4.translate(textureMatrix, 0.5, 0.5, 0.5);
-        textureMatrix = m4.scale(textureMatrix, 0.5, 0.5, 0.5);
-        textureMatrix = m4.multiply(textureMatrix, lightProjectionMatrix);
-        // use the inverse of this world matrix to make
-        // a matrix that will transform other positions
-        // to be relative this world space.
-        textureMatrix = m4.multiply(
-            textureMatrix,
-            m4.inverse(lightWorldMatrix));
     }
 
 
@@ -260,6 +224,7 @@ const GLDrawer = function (canvasId){
         //gl.cullFace(gl.FRONT_AND_BACK);
         gl.enable(gl.DEPTH_TEST);
 
+        gl.clearColor(0, 0, 0, 1);
         // Clear the canvas AND the depth buffer.
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
@@ -303,12 +268,27 @@ const GLDrawer = function (canvasId){
     }
 
     this.multipleObjDraw = function (objMeshList){
+        if(shadows){
+            this.preRender();
+            // draw to the depth texture
+            gl.bindFramebuffer(gl.FRAMEBUFFER, depthTextureObj.depthFrameBuffer);
+            gl.viewport(0, 0, depthTextureObj.depthTextureSize, depthTextureObj.depthTextureSize);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            let lightProjectionMatrix = light.computeLightWorldMatrix();
+            objMeshList.forEach(objmesh => {
+                drawShadows(gl, objmesh, lightProjectionMatrix);
+            })
+        }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        this.preRender();
         objMeshList.forEach(objmesh => {
             this.objDraw(objmesh);
         })
     }
 
     this.drawSkybox = function (){
+        this.preRender();
         this.skybox.drawSkybox(camera);
     }
 

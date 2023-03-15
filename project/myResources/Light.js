@@ -4,8 +4,9 @@
 const Light = function () {
     let ambientLight = [0.2, 0.2, 0.2];
     let colorLight = [1.0, 1.0, 1.0];
+    let colorLightVec4 = [1.0, 1.0, 1.0, 1.0];
     let lightDirection = m4.normalize([-1, 3, 5]);
-    let lightPosition = [0, 1000, 0];
+    let lightPosition = [0, -1000, 0];
     let perspective = false;
     let lightFov = degToRad(60);
     let lightProjectionMatrix;
@@ -39,6 +40,10 @@ const Light = function () {
 
     this.getDirectionalLightColor = function (){
         return colorLight;
+    }
+
+    this.getLightColorVec4 = function (){
+        return colorLightVec4;
     }
 
     this.getLightPosition = function (){

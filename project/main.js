@@ -87,8 +87,6 @@ const Main = function() {
 
         canvas1GlDrawer.getCamera().computeMatrix();
 
-        canvas1GlDrawer.preRender();
-
         //Draw Skybox
         canvas1GlDrawer.drawSkybox();
 
