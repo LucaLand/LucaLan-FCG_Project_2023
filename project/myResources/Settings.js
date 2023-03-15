@@ -8,5 +8,6 @@ const Settings = {
     reflections: true,
     transparency: true,
     fov: degToRad(60),
-    filterColors: [0.2, 0.2, 0.2] //Light color
+    filterColors: [0.2, 0.2, 0.2], //Light color
+    enableCullFace: true
 }

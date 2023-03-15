@@ -66,8 +66,6 @@ let CameraManager = function (gl){
     }
 
      this.computeMatrix = function (){
-
-
          //Setting target on obj
          if(lookingAtTargetObj && targetObj !== null){
              this.targetPosition = targetObj.getPosition();

@@ -2,6 +2,7 @@
 
 // const envmapProgramInfo = webglUtils.createProgramInfo(GlDrawer.gl, ["envmap-vertex-shader", "envmap-fragment-shader"]);
 // const program = webglUtils.createProgramFromScripts(GlDrawer.gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+
 let photo = 0;
 
 const Main = function() {
@@ -9,7 +10,7 @@ const Main = function() {
     let canvas1GlDrawer = new GLDrawer("my_Canvas");
     let camera = canvas1GlDrawer.getCamera();
     let objManager = new ObjManager();
-    let userInputHandler = new UserInputHandler(camera, canvas1GlDrawer.getCanvas());
+    let userInputHandler = new UserInputHandler(canvas1GlDrawer.getCamera(), canvas1GlDrawer.getCanvas());
 
     let canvas2GlDrawer = new GLDrawer("canvas-2");
     canvas2GlDrawer.enableCullFace(false);
@@ -39,7 +40,7 @@ const Main = function() {
     //USER INPUTS Handlers
     userInputHandler.setMovementTarget(objCamera);
     userInputHandler.attachAllDefaultHandlers(canvas1GlDrawer.getCanvas());
-    camera.setTargetObj(objCamera);     //Testing following target for camera
+    camera.setTargetObj(objCamera);
 
 
     //LIGHT TEST
@@ -114,7 +115,7 @@ const Main = function() {
 
     function pullSettingsFromUI(){
         let inputTime = document.getElementById("inputTime");
-        console.log(inputTime.getAttribute("value"))
+        // console.log(inputTime.getAttribute("value"))
         Settings.time = inputTime.value;
     }
 
@@ -123,7 +124,7 @@ const Main = function() {
     }
 
     function drawPhoto() {
-        canvas2GlDrawer.camera = canvas1GlDrawer.getCamera();
+        canvas2GlDrawer.setCamera(canvas1GlDrawer.getCamera());
         canvas2GlDrawer.setLight(canvas1GlDrawer.getLight());
         canvas2GlDrawer.preRender();
         canvas2GlDrawer.drawSkybox();

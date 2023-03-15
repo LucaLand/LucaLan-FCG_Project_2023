@@ -7,29 +7,41 @@
 
 const GLDrawer = function (canvasId){
     let canvas = document.getElementById(canvasId);
-    this.gl = canvas.getContext("webgl");
-    if (!this.gl) {
+    let gl = canvas.getContext("webgl");
+    if (!gl) {
         console.log("!!!NO GL for canvas:"+canvasId);
     }
 
-    let programs = {
-        SkyBoxProgramInfo: webglUtils.createProgramInfo(this.gl, ["skybox-vertex-shader", "skybox-fragment-shader"]),
-        ObjsProgramInfo: webglUtils.createProgramInfo(this.gl, ["3d-vertex-shader", "3d-fragment-shader"]),
+    const ext = gl.getExtension('WEBGL_depth_texture');
+    if (!ext) {
+        return alert('need WEBGL_depth_texture');
     }
 
-    this.camera = new CameraManager(this.gl);
+    let programs = {
+        SkyBoxProgramInfo: webglUtils.createProgramInfo(gl, ["skybox-vertex-shader", "skybox-fragment-shader"]),
+        ObjsProgramInfo: webglUtils.createProgramInfo(gl, ["3d-vertex-shader", "3d-fragment-shader"]),
+        ColorProgramInfo: webglUtils.createProgramInfo(gl, ["color-vertex-shader", "color-fragment-shader"]),
+        MyProgramInfo: webglUtils.createProgramInfo(gl, ["my-vertex-shader", "my-fragment-shader"])
+    }
 
+    let camera = new CameraManager(gl);
     let light = new Light();
-
-    this.skybox = new Skybox(this.gl, programs.SkyBoxProgramInfo);
+    let shadows = true;
+    this.skybox = new Skybox(gl, programs.SkyBoxProgramInfo);
     let cullFace = true;
 
+    let objRenderingProgramInfo = programs.ObjsProgramInfo;
+
     this.getGL = function (){
-        return this.gl;
+        return gl;
     }
 
     this.getCamera = function (){
-        return this.camera;
+        return camera;
+    }
+
+    this.setCamera = function (newCamera) {
+        camera = newCamera;
     }
 
     this.getCanvas = function (){
@@ -52,29 +64,55 @@ const GLDrawer = function (canvasId){
         u_ambientLight: light.getAmbientLight(),
         u_colorLight: light.getDirectionalLightColor(),
         u_lightDirection: light.getLightDirection(),
-        u_view: this.camera.viewMatrix,
-        u_projection: this.camera.projectionMatrix,
-        u_viewWorldPosition: this.camera.cameraPosition
+        u_view: camera.viewMatrix,
+        u_projection: camera.projectionMatrix,
+        u_viewWorldPosition: camera.cameraPosition
     }
 
-    this.updateObjProgramUniforms = function (){
+    let sunProgramUniforms = {
+        u_ambientLight: light.getAmbientLight(),
+        u_colorLight: light.getDirectionalLightColor(),
+        u_lightDirection: light.getLightDirection(),
+        u_view: camera.viewMatrix,
+        u_projection: camera.projectionMatrix,
+        u_viewWorldPosition: camera.cameraPosition,
+        u_projectedTexture: createDepthTexture(gl).depthTexture,
+        u_innerLimit: light.innerLimit,
+        u_outerLimit: light.outerLimit
+    }
+
+    function updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix = m4.identity()){
         objProgramUniforms = {
+            u_view: viewMatrix,
+            u_projection: projectionMatrix,
             u_ambientLight: light.getAmbientLight(),
             u_colorLight: light.getDirectionalLightColor(),
             u_lightDirection: light.getLightDirection(),
-            u_view: this.camera.viewMatrix,
-            u_projection: this.camera.projectionMatrix,
-            u_viewWorldPosition: this.camera.cameraPosition
+            u_viewWorldPosition: camera.cameraPosition
         }
 
+        sunProgramUniforms = {
+            u_view: viewMatrix,
+            u_projection: projectionMatrix,
+            u_textureMatrix: textureMatrix,
+            u_ambientLight: light.getAmbientLight(),
+            u_colorLight: light.getDirectionalLightColor(),
+            u_lightDirection: light.getLightDirection(),
+            u_viewWorldPosition: camera.cameraPosition,
+            u_projectedTexture: createDepthTexture(gl).depthTexture,
+            u_innerLimit: light.innerLimit,
+            u_outerLimit: light.outerLimit
+        }
+
+        return sunProgramUniforms;
         // console.log("GLDrawer: Updating Unifroms");
         //console.log("Program uniform:");
         //console.log(objProgramUniforms);
-        // console.log(this.camera);
+        // console.log(camera);
     }
 
-    function objWriteBuffers(gl, positions, normals, texcoords){
-        let program = programs.ObjsProgramInfo.program;
+    function objWriteBuffers(gl, programInfo, positions, normals, texcoords){
+        let program = programInfo.program;
 
         // look up where the vertex data needs to go.
         let positionLocation = gl.getAttribLocation(program, "a_position");
@@ -88,6 +126,8 @@ const GLDrawer = function (canvasId){
         // Put the positions in the buffer
         //setGeometry(gl);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+        if(programInfo === programs.ColorProgramInfo)
+            return;
 
         // Create a buffer for normals
         let normalsBuffer = gl.createBuffer();
@@ -130,44 +170,98 @@ const GLDrawer = function (canvasId){
     }
 
     this.objDraw = function (objMesh){
-        let gl = this.getGL();
-        let programInfo = programs.ObjsProgramInfo;
+        if(shadows){
+            let lightProjectionMatrix = light.computeLightWorldMatrix();
+            drawShadows(gl, objMesh, lightProjectionMatrix);
+        }
 
         if(objMesh.textureImage !== null)
             this.loadObjTextureIntoBuffer(objMesh.textureImage);
         else
             this.loadDefaultTexture();
-        // console.log("Texture: ")
-        // console.log(objMesh.textureImage);
 
+        drawObj(gl, objMesh, objRenderingProgramInfo);
+    }
+
+    function drawObj(gl, objMesh, programInfo){
+        let projectionMatrix, viewMatrix, textureMatrix = m4.identity();
+        switch (programInfo) {
+            case programs.ColorProgramInfo:
+                projectionMatrix = light.computeLightProjectionMatrix();
+                viewMatrix = light.computeLightWorldMatrix();
+                break;
+            case programs.MyProgramInfo:
+                projectionMatrix = camera.projectionMatrix;
+                viewMatrix = camera.viewMatrix;
+                textureMatrix = calculateTextureMatrix();
+                break;
+            default:
+                projectionMatrix = camera.projectionMatrix;
+                viewMatrix = camera.viewMatrix;
+                break;
+        }
         //Setting program and Uniforms
-        gl.useProgram(programs.ObjsProgramInfo.program);
-        objWriteBuffers(gl, objMesh.positions, objMesh.normals, objMesh.texcoords);
-        this.updateObjProgramUniforms();
-        webglUtils.setUniforms(programInfo, objProgramUniforms); //TODO. do this uniform set in a init funct of the gl (update this only in case of background changes or camera changes)
+        gl.useProgram(programInfo.program);
+        objWriteBuffers(gl, programInfo, objMesh.positions, objMesh.normals, objMesh.texcoords);
+        webglUtils.setUniforms(programInfo, updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix)); //TODO. do this uniform set in a init funct of the gl (update this only in case of background changes or camera changes)
         gl.uniform1i(gl.getUniformLocation(programInfo.program, "diffuseMap"), 0);  // Tell the shader to use texture unit 0 for diffuseMap
         webglUtils.setUniforms(programInfo, objMesh.getObjUniforms());
 
         //DRAW the obj
-        gl.drawArrays(this.getGL().TRIANGLES, 0, objMesh.numVertices);
+        gl.drawArrays(gl.TRIANGLES, 0, objMesh.numVertices);
+    }
+
+    function drawShadows(gl, objMesh, lightWorldMatrix) {
+        // first draw from the POV of the light
+        lightWorldMatrix = m4.lookAt(
+            light.getLightPosition(),          // position
+            light.getLightDirection(), // target
+            [0, 1, 0],                 // up
+        );
+        const lightProjectionMatrix = light.computeLightWorldMatrix();
+
+        const depthTextureObj = createDepthTexture(gl);
+
+        // draw to the depth texture
+        gl.bindFramebuffer(gl.FRAMEBUFFER, depthTextureObj.depthFrameBuffer);
+        gl.viewport(0, 0, depthTextureObj.depthTextureSize, depthTextureObj.depthTextureSize);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        drawObj(gl, objMesh, programs.ColorProgramInfo);
+
+        // now draw scene to the canvas projecting the depth texture into the scene
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        gl.clearColor(0, 0, 0, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        let textureMatrix = m4.identity();
+        textureMatrix = m4.translate(textureMatrix, 0.5, 0.5, 0.5);
+        textureMatrix = m4.scale(textureMatrix, 0.5, 0.5, 0.5);
+        textureMatrix = m4.multiply(textureMatrix, lightProjectionMatrix);
+        // use the inverse of this world matrix to make
+        // a matrix that will transform other positions
+        // to be relative this world space.
+        textureMatrix = m4.multiply(
+            textureMatrix,
+            m4.inverse(lightWorldMatrix));
     }
 
 
     this.preRender = function (){
-        let gl = this.getGL();
         webglUtils.resizeCanvasToDisplaySize(gl.canvas);
         // Tell WebGL how to convert from clip space to pixels
-        gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
         //Optimizing performance with Cull face (try to remove and see what happens)
         if(cullFace)
-            gl.enable(this.gl.CULL_FACE);
+            gl.enable(gl.CULL_FACE);
 
-        //gl.cullFace(this.gl.FRONT_AND_BACK);
-        gl.enable(this.gl.DEPTH_TEST);
+        //gl.cullFace(gl.FRONT_AND_BACK);
+        gl.enable(gl.DEPTH_TEST);
 
         // Clear the canvas AND the depth buffer.
-        gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
     this.loadObjTextureIntoBuffer = function (textureImage){
@@ -215,7 +309,84 @@ const GLDrawer = function (canvasId){
     }
 
     this.drawSkybox = function (){
-        this.skybox.drawSkybox(this.getCamera());
+        this.skybox.drawSkybox(camera);
+    }
+
+    function createDepthTexture(gl){
+        const depthTexture = gl.createTexture();
+        const depthTextureSize = 512;
+        gl.bindTexture(gl.TEXTURE_2D, depthTexture);
+        gl.texImage2D(
+            gl.TEXTURE_2D,      // target
+            0,                  // mip level
+            gl.DEPTH_COMPONENT, // internal format
+            depthTextureSize,   // width
+            depthTextureSize,   // height
+            0,                  // border
+            gl.DEPTH_COMPONENT, // format
+            gl.UNSIGNED_INT,    // type
+            null);              // data
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        const depthFramebuffer = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, depthFramebuffer);
+        gl.framebufferTexture2D(
+            gl.FRAMEBUFFER,       // target
+            gl.DEPTH_ATTACHMENT,  // attachment point
+            gl.TEXTURE_2D,        // texture target
+            depthTexture,         // texture
+            0);              // mip level
+
+        // create a color texture of the same size as the depth texture
+        const unusedTexture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, unusedTexture);
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.RGBA,
+            depthTextureSize,
+            depthTextureSize,
+            0,
+            gl.RGBA,
+            gl.UNSIGNED_BYTE,
+            null,
+        );
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+        // attach it to the framebuffer
+        gl.framebufferTexture2D(
+            gl.FRAMEBUFFER,        // target
+            gl.COLOR_ATTACHMENT0,  // attachment point
+            gl.TEXTURE_2D,         // texture target
+            unusedTexture,         // texture
+            0);                    // mip level
+
+        return {
+            depthTexture: depthTexture,
+            depthFrameBuffer: depthFramebuffer,
+            depthTextureSize: depthTextureSize
+        }
+    }
+
+    function calculateTextureMatrix(){
+        let textureMatrix = m4.identity();
+        textureMatrix = m4.translate(textureMatrix, 0.5, 0.5, 0.5);
+        textureMatrix = m4.scale(textureMatrix, 0.5, 0.5, 0.5);
+        textureMatrix = m4.multiply(textureMatrix, light.computeLightProjectionMatrix());
+        // use the inverse of this world matrix to make
+        // a matrix that will transform other positions
+        // to be relative this world space.
+        textureMatrix = m4.multiply(
+            textureMatrix,
+            m4.inverse(light.computeLightWorldMatrix()));
+
+        return textureMatrix;
     }
 
 
