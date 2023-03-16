@@ -87,11 +87,8 @@ const Main = function() {
 
         canvas1GlDrawer.getCamera().computeMatrix();
 
-        //Draw Skybox
-        canvas1GlDrawer.drawSkybox();
-
-        //Draw all the Geometries loaded
-        canvas1GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
+        //Draw the scene with all the Geometries loaded
+        canvas1GlDrawer.drawSceneWObjects(objManager.getAllObjMesh());
     }
 
     function handleSettings(settings) {
@@ -126,7 +123,7 @@ const Main = function() {
         canvas2GlDrawer.setLight(canvas1GlDrawer.getLight());
         canvas2GlDrawer.preRender();
         canvas2GlDrawer.drawSkybox();
-        canvas2GlDrawer.multipleObjDraw(objManager.getAllObjMesh());
+        canvas2GlDrawer.drawSceneWObjects(objManager.getAllObjMesh());
     }
 
     this.drawPhoto = function (){

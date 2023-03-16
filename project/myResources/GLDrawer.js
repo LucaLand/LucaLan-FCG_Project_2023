@@ -82,7 +82,7 @@ const GLDrawer = function (canvasId){
         u_outerLimit: light.outerLimit
     }
 
-    function updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix = m4.identity()){
+    function updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix){
         objProgramUniforms = {
             u_view: viewMatrix,
             u_projection: projectionMatrix,
@@ -198,10 +198,11 @@ const GLDrawer = function (canvasId){
         }
         //Setting program and Uniforms
         gl.useProgram(programInfo.program);
-        objWriteBuffers(gl, programInfo, objMesh.positions, objMesh.normals, objMesh.texcoords);
         webglUtils.setUniforms(programInfo, updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix)); //TODO. do this uniform set in a init funct of the gl (update this only in case of background changes or camera changes)
         gl.uniform1i(gl.getUniformLocation(programInfo.program, "diffuseMap"), 0);  // Tell the shader to use texture unit 0 for diffuseMap
         webglUtils.setUniforms(programInfo, objMesh.getObjUniforms());
+
+        objWriteBuffers(gl, programInfo, objMesh.positions, objMesh.normals, objMesh.texcoords);
 
         //DRAW the obj
         gl.drawArrays(gl.TRIANGLES, 0, objMesh.numVertices);
@@ -224,7 +225,6 @@ const GLDrawer = function (canvasId){
         //gl.cullFace(gl.FRONT_AND_BACK);
         gl.enable(gl.DEPTH_TEST);
 
-        gl.clearColor(0, 0, 0, 1);
         // Clear the canvas AND the depth buffer.
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
@@ -268,20 +268,6 @@ const GLDrawer = function (canvasId){
     }
 
     this.multipleObjDraw = function (objMeshList){
-        if(shadows){
-            this.preRender();
-            // draw to the depth texture
-            gl.bindFramebuffer(gl.FRAMEBUFFER, depthTextureObj.depthFrameBuffer);
-            gl.viewport(0, 0, depthTextureObj.depthTextureSize, depthTextureObj.depthTextureSize);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            let lightProjectionMatrix = light.computeLightWorldMatrix();
-            objMeshList.forEach(objmesh => {
-                drawShadows(gl, objmesh, lightProjectionMatrix);
-            })
-        }
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        this.preRender();
         objMeshList.forEach(objmesh => {
             this.objDraw(objmesh);
         })
@@ -369,6 +355,23 @@ const GLDrawer = function (canvasId){
         return textureMatrix;
     }
 
+    this.drawSceneWObjects = function (objMeshList){
+        if(shadows){
+            // draw to the depth texture
+            gl.bindFramebuffer(gl.FRAMEBUFFER, depthTextureObj.depthFrameBuffer);
+            this.preRender();
+            objMeshList.forEach(objmesh => {
+                drawShadows(gl, objmesh);
+            })
+        }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        this.preRender();
+        this.drawSkybox();
+        objMeshList.forEach(objmesh => {
+            this.objDraw(objmesh);
+        })
+    }
 
 
 
