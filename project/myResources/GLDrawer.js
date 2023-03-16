@@ -184,7 +184,7 @@ const GLDrawer = function (canvasId){
         switch (programInfo) {
             case programs.ColorProgramInfo:
                 projectionMatrix = light.computeLightProjectionMatrix();
-                viewMatrix = light.computeLightWorldMatrix();
+                viewMatrix = m4.inverse(light.computeLightWorldMatrix());
                 break;
             case programs.MyProgramInfo:
                 projectionMatrix = camera.projectionMatrix;
