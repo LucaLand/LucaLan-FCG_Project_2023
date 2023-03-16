@@ -220,12 +220,12 @@ void main() {
   float dotFromDirection = dot(surfaceToLightDirection,
                                -u_lightDirection);
   float limitRange = u_innerLimit - u_outerLimit;
-  float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
+  float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.9, 1.0);
   float light = inLight * dot(normal, surfaceToLightDirection);
   float specular = inLight * pow(dot(normal, halfVector), shininess);
 
   vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
-  float currentDepth = projectedTexcoord.z + 0.01;
+  float currentDepth = projectedTexcoord.z - 0.006;         // + u_bias
 
   bool inRange =
       projectedTexcoord.x >= 0.0 &&
@@ -235,7 +235,7 @@ void main() {
 
   // the 'r' channel has the depth values
   float projectedDepth = texture2D(u_projectedTexture, projectedTexcoord.xy).r;
-  float shadowLight = (projectedDepth <= currentDepth) ? 0.4 : 0.5;
+  float shadowLight = (projectedDepth <= currentDepth) ? 0.1 : 0.8;
 
   vec4 texColor = texture2D(diffuseMap, v_texcoord) * u_colorLight;
   gl_FragColor = vec4(
