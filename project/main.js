@@ -16,6 +16,10 @@ const Main = function() {
     canvas2GlDrawer.enableCullFace(false);
 
     //CREAZIONE SCENA
+    //Camera OBJ
+    const objCamera = objManager.loadObj("camera", "assets/objs/DigitalCamera_v3_L3.123c1cb807d5-2d9f-49cf-a1e4-b466a061bb87/10818_DigitalCamera_v2.obj");
+    objCamera.setPosition(0, 1, 0);
+
     let scale= 50;
     const sanpietriniStreet = objManager.loadObj("strada", "assets/objs/sanpietrini_street.obj");
     sanpietriniStreet.setScale(100, 0.1, 100);
@@ -33,9 +37,7 @@ const Main = function() {
     cortile_pareti.setScale(scale,scale,scale);
     cortile_pareti.setPosition(0, scale/4, 0);
 
-    //Camera OBJ
-    const objCamera = objManager.loadObj("camera", "assets/objs/DigitalCamera_v3_L3.123c1cb807d5-2d9f-49cf-a1e4-b466a061bb87/10818_DigitalCamera_v2.obj");
-    objCamera.setPosition(0, 1, 0);
+
 
     //USER INPUTS Handlers
     userInputHandler.setMovementTarget(objCamera);
