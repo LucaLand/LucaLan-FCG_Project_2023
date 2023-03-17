@@ -74,13 +74,14 @@ const GLDrawer = function (canvasId){
     let sunProgramUniforms = {
         u_ambientLight: light.getAmbientLight(),
         u_colorLight: light.getLightColorVec4(),
-        u_lightDirection: light.getLightDirection(),
+        u_lightDirection: light.computeLightWorldMatrix().slice(8, 11).map(v => -v),
         u_view: camera.viewMatrix,
         u_projection: camera.projectionMatrix,
         u_viewWorldPosition: camera.cameraPosition,
         u_projectedTexture: depthTextureObj.depthTexture,
         u_innerLimit: light.innerLimit,
-        u_outerLimit: light.outerLimit
+        u_outerLimit: light.outerLimit,
+        u_color: [1,1,1,1]
     }
 
     function updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix){
@@ -94,16 +95,17 @@ const GLDrawer = function (canvasId){
         }
 
         sunProgramUniforms = {
-            u_view: viewMatrix,
-            u_projection: projectionMatrix,
-            u_textureMatrix: textureMatrix,
             u_ambientLight: light.getAmbientLight(),
             u_colorLight: light.getLightColorVec4(),
-            u_lightDirection: light.getLightDirection(),
+            u_lightDirection: light.computeLightWorldMatrix().slice(8, 11).map(v => -v),
+            u_view: camera.viewMatrix,
+            u_projection: camera.projectionMatrix,
             u_viewWorldPosition: camera.cameraPosition,
             u_projectedTexture: depthTextureObj.depthTexture,
+            u_textureMatrix: textureMatrix,
             u_innerLimit: light.innerLimit,
-            u_outerLimit: light.outerLimit
+            u_outerLimit: light.outerLimit,
+            u_color: [1,1,1,1]
         }
 
         return sunProgramUniforms;
