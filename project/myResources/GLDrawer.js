@@ -26,11 +26,12 @@ const GLDrawer = function (canvasId){
 
     let camera = new CameraManager(gl);
     let light = new Light();
-    let shadows = true;
     this.skybox = new Skybox(gl, programs.SkyBoxProgramInfo);
+    let shadows = true;
     let cullFace = true;
-    const depthTextureObj = createDepthTexture(gl);
+    let frustum = true;
 
+    const depthTextureObj = createDepthTexture(gl);
     let objRenderingProgramInfo = programs.MyProgramInfo;
 
     this.getGL = function (){
@@ -371,6 +372,64 @@ const GLDrawer = function (canvasId){
         objMeshList.forEach(objmesh => {
             this.objDraw(objmesh);
         })
+
+        if(frustum)
+            this.drawFrustum();
+    }
+
+    this.drawFrustum = function (){
+        const viewMatrix = m4.inverse(camera.cameraMatrix);
+        const colorProgramInfo = programs.ColorProgramInfo
+        const cubeLinesBufferInfo = webglUtils.createBufferInfoFromArrays(gl, {
+            position: [
+                -1, -1, -1,
+                1, -1, -1,
+                -1,  1, -1,
+                1,  1, -1,
+                -1, -1,  1,
+                1, -1,  1,
+                -1,  1,  1,
+                1,  1,  1,
+            ],
+            indices: [
+                0, 1,
+                1, 3,
+                3, 2,
+                2, 0,
+
+                4, 5,
+                5, 7,
+                7, 6,
+                6, 4,
+
+                0, 4,
+                1, 5,
+                3, 7,
+                2, 6,
+            ],
+        });
+
+        gl.useProgram(colorProgramInfo.program);
+
+        // Setup all the needed attributes.
+        webglUtils.setBuffersAndAttributes(gl, colorProgramInfo, cubeLinesBufferInfo);
+
+        // scale the cube in Z so it's really long
+        // to represent the texture is being projected to
+        // infinity
+        const mat = m4.multiply(
+            light.computeLightWorldMatrix(), m4.inverse(light.computeLightProjectionMatrix()));
+
+        // Set the uniforms we just computed
+        webglUtils.setUniforms(colorProgramInfo, {
+            u_color: [1, 1, 1, 1],
+            u_view: viewMatrix,
+            u_projection: camera.projectionMatrix,
+            u_world: mat,
+        });
+
+        // calls gl.drawArrays or gl.drawElements
+        webglUtils.drawBufferInfo(gl, cubeLinesBufferInfo, gl.LINES);
     }
 
 
