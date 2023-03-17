@@ -32,6 +32,7 @@ const GLDrawer = function (canvasId){
     let frustum = true;
 
     const depthTextureObj = createDepthTexture(gl);
+    let texture;
     let objRenderingProgramInfo = programs.MyProgramInfo;
 
     this.getGL = function (){
@@ -62,53 +63,62 @@ const GLDrawer = function (canvasId){
         return light;
     }
 
-    let objProgramUniforms = {
-        u_ambientLight: light.getAmbientLight(),
-        u_colorLight: light.getDirectionalLightColor(),
-        u_lightDirection: light.getLightDirection(),
-        u_view: camera.viewMatrix,
-        u_projection: camera.projectionMatrix,
-        u_viewWorldPosition: camera.cameraPosition
-    }
+    //MAIN FUNC DRAW
+    this.drawSceneWObjects = function (objMeshList){
+        //Pre Render
+        webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+        gl.enable(gl.CULL_FACE);
+        gl.enable(gl.DEPTH_TEST);
 
-    let sunProgramUniforms = {
-        u_ambientLight: light.getAmbientLight(),
-        u_colorLight: light.getLightColorVec4(),
-        u_lightDirection: light.computeLightWorldMatrix().slice(8, 11).map(v => -v),
-        u_view: camera.viewMatrix,
-        u_projection: camera.projectionMatrix,
-        u_viewWorldPosition: camera.cameraPosition,
-        u_projectedTexture: depthTextureObj.depthTexture,
-        u_innerLimit: light.innerLimit,
-        u_outerLimit: light.outerLimit,
-        u_color: [1,1,1,1]
-    }
-
-    function updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix){
-        objProgramUniforms = {
-            u_view: viewMatrix,
-            u_projection: projectionMatrix,
-            u_ambientLight: light.getAmbientLight(),
-            u_colorLight: light.getDirectionalLightColor(),
-            u_lightDirection: light.getLightDirection(),
-            u_viewWorldPosition: camera.cameraPosition
+        if(shadows){
+            // draw to the depth texture
+            gl.bindFramebuffer(gl.FRAMEBUFFER, depthTextureObj.depthFrameBuffer);
+            gl.viewport(0, 0, depthTextureObj.depthTextureSize, depthTextureObj.depthTextureSize);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            objMeshList.forEach(objmesh => {
+                drawShadows(gl, objmesh);
+            })
         }
 
-        sunProgramUniforms = {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        gl.clearColor(0, 0, 0, 1);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        this.drawSkybox();
+        objMeshList.forEach(objmesh => {
+            this.objDraw(objmesh);
+        })
+
+        if(frustum)
+            this.drawFrustum();
+    }
+
+    //UNIFORM UPDATE
+    function updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix){
+        // let objProgramUniforms = {
+        //     u_view: viewMatrix,
+        //     u_projection: projectionMatrix,
+        //     u_ambientLight: light.getAmbientLight(),
+        //     u_colorLight: light.getDirectionalLightColor(),
+        //     u_lightDirection: light.getLightDirection(),
+        //     u_viewWorldPosition: camera.cameraPosition
+        // }
+        return {
             u_ambientLight: light.getAmbientLight(),
             u_colorLight: light.getLightColorVec4(),
             u_lightDirection: light.computeLightWorldMatrix().slice(8, 11).map(v => -v),
             u_view: viewMatrix,
             u_projection: projectionMatrix,
-            u_viewWorldPosition: camera.viewMatrix.slice(12,15), //camera.cameraPosition,
+            u_viewWorldPosition: camera.viewMatrix.slice(12, 15), //camera.cameraPosition,
             u_projectedTexture: depthTextureObj.depthTexture,
             u_textureMatrix: textureMatrix,
             u_innerLimit: light.innerLimit,
             u_outerLimit: light.outerLimit,
-            u_color: [1,1,1,1]
-        }
-
-        return sunProgramUniforms;
+            u_color: [1, 1, 1, 1],
+            u_reverseLightDirection: light.computeLightWorldMatrix().slice(8, 11),
+            u_texture: texture
+        };
         // console.log("GLDrawer: Updating Unifroms");
         //console.log("Program uniform:");
         //console.log(objProgramUniforms);
@@ -202,7 +212,7 @@ const GLDrawer = function (canvasId){
         //Setting program and Uniforms
         gl.useProgram(programInfo.program);
         webglUtils.setUniforms(programInfo, updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix)); //TODO. do this uniform set in a init funct of the gl (update this only in case of background changes or camera changes)
-        gl.uniform1i(gl.getUniformLocation(programInfo.program, "diffuseMap"), 0);  // Tell the shader to use texture unit 0 for diffuseMap
+        gl.uniform1i(gl.getUniformLocation(programInfo.program, "u_texture"), 0);  // Tell the shader to use texture unit 0 for diffuseMap
         webglUtils.setUniforms(programInfo, objMesh.getObjUniforms());
 
         objWriteBuffers(gl, programInfo, objMesh.positions, objMesh.normals, objMesh.texcoords);
@@ -235,7 +245,7 @@ const GLDrawer = function (canvasId){
     this.loadObjTextureIntoBuffer = function (textureImage){
         let gl = this.getGL();
 
-        const texture = gl.createTexture();
+        texture = gl.createTexture();
         const level = 0;
         const internalFormat = gl.RGBA;
         const srcFormat = gl.RGBA;
@@ -257,7 +267,7 @@ const GLDrawer = function (canvasId){
     this.loadDefaultTexture = function (){
         let gl = this.getGL();
 
-        const texture = gl.createTexture();
+        texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
         const level = 0;
         const internalFormat = gl.RGBA;
@@ -358,27 +368,6 @@ const GLDrawer = function (canvasId){
         return textureMatrix;
     }
 
-    this.drawSceneWObjects = function (objMeshList){
-        if(shadows){
-            // draw to the depth texture
-            gl.bindFramebuffer(gl.FRAMEBUFFER, depthTextureObj.depthFrameBuffer);
-            this.preRender();
-            objMeshList.forEach(objmesh => {
-                drawShadows(gl, objmesh);
-            })
-        }
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        this.preRender();
-        this.drawSkybox();
-        objMeshList.forEach(objmesh => {
-            this.objDraw(objmesh);
-        })
-
-        if(frustum)
-            this.drawFrustum();
-    }
-
     this.drawFrustum = function (){
         const viewMatrix = m4.inverse(camera.cameraMatrix);
         const colorProgramInfo = programs.ColorProgramInfo
@@ -433,7 +422,6 @@ const GLDrawer = function (canvasId){
         // calls gl.drawArrays or gl.drawElements
         webglUtils.drawBufferInfo(gl, cubeLinesBufferInfo, gl.LINES);
     }
-
 
 
 }
