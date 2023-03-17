@@ -5,21 +5,19 @@ const Light = function () {
     let ambientLight = [0.2, 0.2, 0.2];
     let colorLight = [1.0, 1.0, 1.0];
     let colorLightVec4 = [1.0, 1.0, 1.0, 1.0];
-    let lightDirection = [0,0,1]; //Target
+    let lightPosition = [0, 30, 0];
+    let lightDirection = [50, 0, 0]; //Target
     // Direction -> //m4.normalize([-1, 3, 5]);
-    let lightPosition = [0, 0, 0];
-    let perspective = false;
-    let lightFov = degToRad(60);
-    let lightProjectionMatrix;
-    let lightWorldMatrix;
+    let lightFov = degToRad(160);
 
-    this.innerLimit = -1.0;
-    this.outerLimit = 1;
-    this.near = 0.5;
-    this.far = 1000;
+    let perspective = true;
+    this.innerLimit = Math.cos(degToRad(lightFov / 2 - 10));
+    this.outerLimit = Math.cos(degToRad(lightFov / 2));
+    this.near = 0.4;
+    this.far = 80;
 
-    this.projWidth = 10;
-    this.projHeight = 10;
+    this.projWidth = 100;
+    this.projHeight = 100;
 
     this.setLightDirection = function (x, y, z){
         lightDirection = m4.normalize([x, y, z]);
@@ -71,18 +69,18 @@ const Light = function () {
 
     this.computeLightWorldMatrix = function (){
         // first draw from the POV of the light
-        lightWorldMatrix = m4.lookAt(
-            this.getLightPosition(),          // position
-            this.getLightDirection(),         // target
-            [0, 0, -1],                       // up
+        let lightWorldMatrix = m4.lookAt(
+            lightPosition,          // position
+            lightDirection,         // target
+            [0, 1, 0]                       // up
         );
         return lightWorldMatrix;
     }
 
     this.computeLightProjectionMatrix = function (){
-        lightProjectionMatrix = this.getPerspective()
+        let lightProjectionMatrix = perspective
             ? m4.perspective(
-                degToRad(this.getLightFov()),
+                lightFov,
                 this.projWidth / this.projHeight,
                 this.near,  // near
                 this.far)   // far
