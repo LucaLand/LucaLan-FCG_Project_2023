@@ -227,16 +227,19 @@ const UserInputHandler = function (cam, canvas){
                 camera.setFollowTargetObj(true);
                 camera.polarMode = true;
                 camera.setCameraAttrDefault1();
+                step = 1;
                 break;
             case cameraModesEnum.firstPerson:
                 camera.polarMode = false;
                 camera.setFollowTargetObj(false);
                 camera.up = [0,1,0];
+                step = 0.5;
                 break;
             case cameraModesEnum.freeCamera:
                 camera.polarMode = false;
                 camera.setFollowTargetObj(false);
                 camera.setTargetForward();
+                step = 3.0;
                 break;
         }
     }
@@ -270,11 +273,13 @@ const UserInputHandler = function (cam, canvas){
         targetObjMesh.setRotation(-angleVertical, angle, 0);
         camera.move(directions.Forward, 1);
         camera.setTargetForward();
+
     }
 
     this.updateFreeCamera = function (){
         camera.setAngle(angle, angleVertical);
         camera.setTargetForward();
+        step = 2;
     }
 
     this.refreshCameraMode = function (newCameraMode){
