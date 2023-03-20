@@ -5,22 +5,28 @@ const Light = function () {
     let ambientLight = [0.2, 0.2, 0.2];
     let colorLight = [1.0, 1.0, 1.0];
     let colorLightVec4 = [1.0, 1.0, 1.0, 1.0];
-    let lightPosition = [0, 10, 0];
+    let lightPosition = [0, 50, 0];
     let lightTarget = [10, 0, 0];
     // Direction -> //m4.normalize([-1, 3, 5]);
-    let lightFov = degToRad(100);
+    let lightFov = degToRad(80);
 
-    let perspective = true;
+    let perspective = false;
     this.innerLimit = 0.9999; //Math.cos(degToRad(lightFov / 2 - 10));
     this.outerLimit = 0.1; //Math.cos(degToRad(lightFov / 2));
     this.near = 0.4;
     this.far = 80;
+    this.bias = -0.01;
 
-    this.projWidth = 100;
-    this.projHeight = 100;
+    this.projWidth = 80;
+    this.projHeight = 80;
 
     this.setLightTarget = function (x, y, z){
-        lightTarget = [x,y,z];      //m4.normalize([x, y, z]); Direction
+        let x2 = lightTarget[0], y2 = lightTarget[1], z2 = lightTarget[2];
+        x2 = (x!==null) ? x : x2;
+        y2 = (x!==null) ? y : y2;
+        z2 = (x!==null) ? z : z2;
+        lightTarget = [x2, y2, z2];
+        //m4.normalize([x, y, z]); Direction
     }
 
     this.getLightTarget = function (){
@@ -45,6 +51,14 @@ const Light = function () {
 
     this.getLightColorVec4 = function (){
         return colorLightVec4;
+    }
+
+    this.setLightPosition = function (x = null, y = null, z = null){
+        let x2 = lightPosition[0], y2=lightPosition[1], z2=lightPosition[2];
+        x2 = (x!==null) ? x : x2;
+        y2 = (x!==null) ? y : y2;
+        z2 = (x!==null) ? z : z2;
+        lightPosition = [x2, y2, z2];
     }
 
     this.getLightPosition = function (){
