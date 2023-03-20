@@ -106,4 +106,22 @@ const Light = function () {
                 this.far);                      // far
         return lightProjectionMatrix;
     }
+
+    this.setDirectionalLight = function (){
+        perspective = false;
+        this.bias = -0.005;
+        this.setLightPosition(0, 100, 0);
+        this.setLightTarget(0,0,0);
+        this.near = 0.1;
+        this.far = 150;
+        this.projHeight = 150;
+        this.projWidth = 150;
+        colorLightVec4 = [1.0, 0.95, 0.85, 1.0];
+    }
+
+    this.updateTime = function (time){
+        this.setLightPosition(-(time*2 - 25*2), 100, 0);
+        this.setLightTarget(time * 3 - 25 * 3, 0, 0);
+    }
+
 }
