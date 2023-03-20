@@ -11,8 +11,8 @@ const Light = function () {
     let lightFov = degToRad(100);
 
     let perspective = true;
-    this.innerLimit = Math.cos(degToRad(lightFov / 2 - 10));
-    this.outerLimit = Math.cos(degToRad(lightFov / 2));
+    this.innerLimit = 0.9999; //Math.cos(degToRad(lightFov / 2 - 10));
+    this.outerLimit = 0.1; //Math.cos(degToRad(lightFov / 2));
     this.near = 0.4;
     this.far = 80;
 
