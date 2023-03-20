@@ -30,6 +30,9 @@ let ObjMesh = function (id, name, mesh, meshData){
     this.opacity = meshData.opacity;   //Ni
     this.meshMatrix = m4.identity(); //Obj world matrix
 
+    //Controls if an object emit shadows or not
+    this.shadow = true;
+
     let objPosition = {x:0, y:0, z:0};
     let objRotation = {x:0, y:0, z:0};
     let objScale = {x:1, y:1, z:1};
@@ -109,6 +112,10 @@ let ObjMesh = function (id, name, mesh, meshData){
             case directions.Right: this.translate(-dxr, 0, -dzr); break;
             case directions.Left: this.translate(dxr, 0, dzr); break;
         }
+    }
+
+    this.setShadowRender = function (bool){
+        this.shadow = bool;
     }
 
 

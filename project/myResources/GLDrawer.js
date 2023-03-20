@@ -79,7 +79,8 @@ const GLDrawer = function (canvasId){
             gl.viewport(0, 0, depthTextureObj.depthTextureSize, depthTextureObj.depthTextureSize);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             objMeshList.forEach(objmesh => {
-                drawShadows(gl, objmesh);
+                if(objmesh.shadow)
+                    drawShadows(gl, objmesh);
             })
         }
 
