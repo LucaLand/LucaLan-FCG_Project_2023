@@ -107,7 +107,7 @@ const Light = function () {
         return lightProjectionMatrix;
     }
 
-    this.setDirectionalLight = function (){
+    this.setSunLight = function (){
         perspective = false;
         this.bias = -0.005;
         this.setLightPosition(0, 100, 0);
@@ -120,8 +120,12 @@ const Light = function () {
     }
 
     this.updateTime = function (time){
-        this.setLightPosition(-(time*2 - 25*2), 100, 0);
-        this.setLightTarget(time * 3 - 25 * 3, 0, 0);
+        this.setLightPosition(-(time*2 - 25*2), 100, -50+Math.abs(time - 25));
+        this.setLightTarget(time * 4 - 25 * 4, 0, 0);
     }
 
+
+    this.setSpotLight = function (){
+
+    }
 }

@@ -48,7 +48,7 @@ const Main = function() {
 
     //LIGHT TEST
     let light = new Light();
-    light.setDirectionalLight();
+    light.setSunLight();
 
     canvas1GlDrawer.setLight(light);
 
