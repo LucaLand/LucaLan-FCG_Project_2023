@@ -141,6 +141,9 @@
         attribute vec2 a_texcoord;
         attribute vec3 a_normal;
 
+        uniform vec3 u_lightWorldPosition;
+        uniform vec3 u_viewWorldPosition;
+
         uniform mat4 u_projection;
         uniform mat4 u_view;
         uniform mat4 u_world;
@@ -149,6 +152,9 @@
         varying vec2 v_texcoord;
         varying vec4 v_projectedTexcoord;
         varying vec3 v_normal;
+
+        varying vec3 v_surfaceToLight;
+        varying vec3 v_surfaceToView;
 
         void main() {
           // Multiply the position by the matrix.
@@ -163,47 +169,73 @@
 
           // orient the normals and pass to the fragment shader
           v_normal = mat3(u_world) * a_normal;
+
+          // compute the world position of the surface
+          vec3 surfaceWorldPosition = (u_world * a_position).xyz;
+
+          // compute the vector of the surface to the light
+          // and pass it to the fragment shader
+          v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
+
+          // compute the vector of the surface to the view/camera
+          // and pass it to the fragment shader
+          v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition;
         }
     </script>
     <script id="my-fragment-shader" type="x-shader/x-fragment">
-    precision mediump float;
+        precision mediump float;
 
-    // Passed in from the vertex shader.
-    varying vec2 v_texcoord;
-    varying vec4 v_projectedTexcoord;
-    varying vec3 v_normal;
+        // Passed in from the vertex shader.
+        varying vec2 v_texcoord;
+        varying vec4 v_projectedTexcoord;
+        varying vec3 v_normal;
+        varying vec3 v_surfaceToLight;
+        varying vec3 v_surfaceToView;
 
-    uniform vec4 u_colorLight;
-    uniform sampler2D u_texture;
-    uniform sampler2D u_projectedTexture;
-    uniform vec3 u_reverseLightDirection;
+        uniform vec4 u_colorLight;
+        uniform sampler2D u_texture;
+        uniform sampler2D u_projectedTexture;
+        uniform float shininess;
+        uniform vec3 u_lightDirection;
+        uniform float u_innerLimit;          // in dot space
+        uniform float u_outerLimit;          // in dot space
 
-    void main() {
-      // because v_normal is a varying it's interpolated
-      // so it will not be a unit vector. Normalizing it
-      // will make it a unit vector again
-      vec3 normal = normalize(v_normal);
+        void main() {
+          // because v_normal is a varying it's interpolated
+          // so it will not be a unit vector. Normalizing it
+          // will make it a unit vector again
+          vec3 normal = normalize(v_normal);
 
-      float light = dot(normal, u_reverseLightDirection);
+          vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+          vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+          vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection);
 
-      vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
-      float currentDepth = projectedTexcoord.z + (-0.01); //u_bias
+          float dotFromDirection = dot(surfaceToLightDirection,
+                                       -u_lightDirection);
+          float limitRange = u_innerLimit - u_outerLimit;
+          float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
+          float light = inLight * dot(normal, surfaceToLightDirection);
+          float specular = inLight * pow(dot(normal, halfVector), shininess);
 
-      bool inRange =
-          projectedTexcoord.x >= 0.0 &&
-          projectedTexcoord.x <= 1.0 &&
-          projectedTexcoord.y >= 0.0 &&
-          projectedTexcoord.y <= 1.0;
+          vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
+          float currentDepth = projectedTexcoord.z + (-0.08);
 
-      // the 'r' channel has the depth values
-      float projectedDepth = texture2D(u_projectedTexture, projectedTexcoord.xy).r;
-      float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 0.8;
+          bool inRange =
+              projectedTexcoord.x >= 0.0 &&
+              projectedTexcoord.x <= 1.0 &&
+              projectedTexcoord.y >= 0.0 &&
+              projectedTexcoord.y <= 1.0;
 
-      vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorLight;
-      gl_FragColor = vec4(
-          texColor.rgb * light * shadowLight,
-          texColor.a);
-    }
+          // the 'r' channel has the depth values
+          float projectedDepth = texture2D(u_projectedTexture, projectedTexcoord.xy).r;
+          float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;
+
+          vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorLight;
+          gl_FragColor = vec4(
+              texColor.rgb * light * shadowLight +
+              specular * shadowLight,
+              texColor.a);
+        }
     </script>
     <!-- COLOR Shaders -->
     <script  id="color-vertex-shader" type="x-shader/x-vertex">
