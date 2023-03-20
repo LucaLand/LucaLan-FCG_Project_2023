@@ -7,6 +7,7 @@
 
 const GLDrawer = function (canvasId){
     let canvas = document.getElementById(canvasId);
+    //For canvas2 image download
     let glContextAttributes = { preserveDrawingBuffer: true };
     let gl = canvas.getContext("experimental-webgl", glContextAttributes);
     // let gl = canvas.getContext("webgl");
@@ -147,8 +148,20 @@ const GLDrawer = function (canvasId){
         // Put the positions in the buffer
         //setGeometry(gl);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-        if(programInfo === programs.ColorProgramInfo)
+        if(programInfo === programs.ColorProgramInfo){
+            // Turn on the position attribute
+            gl.enableVertexAttribArray(positionLocation);
+            // Bind the position buffer.
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+            let size = 3;          // 3 components per iteration
+            let type = gl.FLOAT;   // the data is 32bit floats
+            let normalize = false; // don't normalize the data
+            let stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+            let offset = 0;        // start at the beginning of the buffer
+            gl.vertexAttribPointer(positionLocation, size, type, normalize, stride, offset);
             return;
+        }
 
         // Create a buffer for normals
         let normalsBuffer = gl.createBuffer();
@@ -210,7 +223,6 @@ const GLDrawer = function (canvasId){
                 projectionMatrix = camera.projectionMatrix;
                 viewMatrix = camera.viewMatrix;
                 textureMatrix = calculateTextureMatrix();
-                console.log("My shader");
                 break;
             default:
                 projectionMatrix = camera.projectionMatrix;
@@ -220,7 +232,8 @@ const GLDrawer = function (canvasId){
         //Setting program and Uniforms
         gl.useProgram(programInfo.program);
         webglUtils.setUniforms(programInfo, updateObjProgramUniforms(projectionMatrix, viewMatrix, textureMatrix)); //TODO. do this uniform set in a init funct of the gl (update this only in case of background changes or camera changes)
-        gl.uniform1i(gl.getUniformLocation(programInfo.program, "u_texture"), 0);  // Tell the shader to use texture unit 0 for diffuseMap
+        if(texture !== null)
+            gl.uniform1i(gl.getUniformLocation(programInfo.program, "u_texture"), 0);  // Tell the shader to use texture unit 0 for diffuseMap
         webglUtils.setUniforms(programInfo, objMesh.getObjUniforms());
 
         objWriteBuffers(gl, programInfo, objMesh.positions, objMesh.normals, objMesh.texcoords);
