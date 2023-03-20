@@ -124,6 +124,12 @@ body * {
     left: 10px;
 }
 
+#canvas-2-download {
+    position: absolute;
+    top: 10px;
+    right: 50%;
+}
+
 button {
     float: right;
     width: 80px;
@@ -140,4 +146,11 @@ button.invisible {
     top: 4px;
     right: 4px;
     width: 200px;
+}
+
+.buttonText {
+    background-color: white;
+    border-radius: 10pt;
+    border: solid white 2pt;
+    background-clip: border-box;
 }

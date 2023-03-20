@@ -7,7 +7,9 @@
 
 const GLDrawer = function (canvasId){
     let canvas = document.getElementById(canvasId);
-    let gl = canvas.getContext("webgl");
+    let glContextAttributes = { preserveDrawingBuffer: true };
+    let gl = canvas.getContext("experimental-webgl", glContextAttributes);
+    // let gl = canvas.getContext("webgl");
     if (!gl) {
         console.log("!!!NO GL for canvas:"+canvasId);
     }
