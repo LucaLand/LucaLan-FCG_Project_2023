@@ -30,7 +30,6 @@ const GLDrawer = function (canvasId){
     let camera = new CameraManager(gl);
     let light = new Light();
     this.skybox = new Skybox(gl, programs.SkyBoxProgramInfo);
-    let shadows = true;
     let cullFace = true;
     let frustum = true;
 
@@ -73,7 +72,7 @@ const GLDrawer = function (canvasId){
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
 
-        if(shadows){
+        if(light.enabledShadows){
             // draw to the depth texture
             gl.bindFramebuffer(gl.FRAMEBUFFER, depthTextureObj.depthFrameBuffer);
             gl.viewport(0, 0, depthTextureObj.depthTextureSize, depthTextureObj.depthTextureSize);
