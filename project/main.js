@@ -36,6 +36,7 @@ const Main = function() {
     const cortile_pareti = objManager.loadObj("pareti-cortile", "assets/objs/cortile-pareti.obj");
     cortile_pareti.setScale(scale,scale,scale);
     cortile_pareti.setPosition(0, scale/4, 0);
+    cortile_pareti.setShadowRender(false);
 
 
 
@@ -47,8 +48,9 @@ const Main = function() {
 
     //LIGHT TEST
     let light = new Light();
+    light.setDirectionalLight();
+
     canvas1GlDrawer.setLight(light);
-    let lightDir = 1;
 
     //draw with starting time 0
     let then = 0;
@@ -61,7 +63,7 @@ const Main = function() {
         let deltaTime = time - then;  // Subtract the previous time from the current time
 
         pullSettingsFromUI();
-        handleSettings();
+        handleSettings(Settings);
 
         updateVisualAndUI();
 
@@ -79,8 +81,6 @@ const Main = function() {
             render(time);
         }
 
-        light.setLightDirection(lightDir, 10, 4)
-
         requestAnimationFrame(drawScene);
     }
 
@@ -94,15 +94,15 @@ const Main = function() {
     }
 
     function handleSettings(settings) {
-        let time = Settings.time;
+        let time = settings.time;
         if(time < 50 && time >= 0){
-            lightDir = time * 3 - 25 * 3;
+            light.updateTime(time);
         }else if(time < 0){
-            Settings.time = 0;
+            settings.time = 0;
         }else if(time <= 100 && time >= 50){
             //TODO. night = true;
         }else if(time > 100){
-            Settings.time = 100
+            settings.time = 100
         }
     }
 
