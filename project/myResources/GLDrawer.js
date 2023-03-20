@@ -107,19 +107,24 @@ const GLDrawer = function (canvasId){
         //     u_viewWorldPosition: camera.cameraPosition
         // }
         return {
-            u_ambientLight: light.getAmbientLight(),
-            u_colorLight: light.getLightColorVec4(),
-            u_lightDirection: light.computeLightWorldMatrix().slice(8, 11).map(v => -v),
-            u_view: viewMatrix,
+            //Vertex
+            u_lightWorldPosition: light.getLightPosition(),
+            u_viewWorldPosition: camera.cameraMatrix.slice(12, 15), //camera.cameraPosition,
             u_projection: projectionMatrix,
-            u_viewWorldPosition: camera.viewMatrix.slice(12, 15), //camera.cameraPosition,
-            u_projectedTexture: depthTextureObj.depthTexture,
+            u_view: viewMatrix,
             u_textureMatrix: textureMatrix,
+            //Fragment
+            u_colorLight: light.getLightColorVec4(),
+            u_texture: texture,
+            u_projectedTexture: depthTextureObj.depthTexture,
+            u_lightDirection: light.computeLightWorldMatrix().slice(8, 11).map(v => -v),
             u_innerLimit: light.innerLimit,
             u_outerLimit: light.outerLimit,
+            u_ambientLight: light.getAmbientLight(),
+            //Color shader
             u_color: [1, 1, 1, 1],
-            u_reverseLightDirection: light.computeLightWorldMatrix().slice(8, 11),
-            u_texture: texture
+            //Shader 2
+            u_reverseLightDirection: light.computeLightWorldMatrix().slice(8, 11)
         };
         // console.log("GLDrawer: Updating Unifroms");
         //console.log("Program uniform:");
@@ -205,6 +210,7 @@ const GLDrawer = function (canvasId){
                 projectionMatrix = camera.projectionMatrix;
                 viewMatrix = camera.viewMatrix;
                 textureMatrix = calculateTextureMatrix();
+                console.log("My shader");
                 break;
             default:
                 projectionMatrix = camera.projectionMatrix;
