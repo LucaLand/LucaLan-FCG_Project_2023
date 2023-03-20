@@ -199,6 +199,7 @@
         uniform vec3 u_lightDirection;
         uniform float u_innerLimit;          // in dot space
         uniform float u_outerLimit;          // in dot space
+        uniform float u_bias;
 
         void main() {
           // because v_normal is a varying it's interpolated
@@ -218,7 +219,7 @@
           float specular = inLight * pow(dot(normal, halfVector), shininess);
 
           vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
-          float currentDepth = projectedTexcoord.z + (-0.005);
+          float currentDepth = projectedTexcoord.z + u_bias;
 
           bool inRange =
               projectedTexcoord.x >= 0.0 &&

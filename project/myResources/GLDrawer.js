@@ -122,6 +122,7 @@ const GLDrawer = function (canvasId){
             u_innerLimit: light.innerLimit,
             u_outerLimit: light.outerLimit,
             u_ambientLight: light.getAmbientLight(),
+            u_bias: light.bias,
             //Color shader
             u_color: [1, 1, 1, 1],
             //Shader 2
