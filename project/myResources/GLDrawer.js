@@ -315,7 +315,7 @@ const GLDrawer = function (canvasId){
 
     function createDepthTexture(gl){
         const depthTexture = gl.createTexture();
-        const depthTextureSize = 512;
+        const depthTextureSize = 4096;      //Set dephtTexture size to 4096 to upgrade the shadows definition
         gl.bindTexture(gl.TEXTURE_2D, depthTexture);
         gl.texImage2D(
             gl.TEXTURE_2D,      // target
