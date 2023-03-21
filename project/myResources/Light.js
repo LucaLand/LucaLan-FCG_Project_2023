@@ -110,7 +110,7 @@ const Light = function () {
 
     this.setSunLight = function (){
         perspective = false;
-        this.bias = -0.005;
+        this.bias = -0.007;
         this.setLightPosition(0, 100, 0);
         this.setLightTarget(0,0,0);
         this.near = 0.1;
@@ -118,6 +118,8 @@ const Light = function () {
         this.projHeight = 150;
         this.projWidth = 150;
         colorLightVec4 = [1.0, 0.95, 0.85, 1.0];
+        this.innerLimit = 0.9999; //Math.cos(degToRad(lightFov / 2 - 10));
+        this.outerLimit = 0.1; //Math.cos(degToRad(lightFov / 2));
     }
 
     this.updateTime = function (time){
