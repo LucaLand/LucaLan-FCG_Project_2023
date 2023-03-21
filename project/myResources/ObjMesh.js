@@ -90,6 +90,10 @@ let ObjMesh = function (id, name, mesh, meshData){
         objScale.z = z;
     }
 
+    this.getScale = function (){
+        return [objScale.x, objScale.y, objScale.z];
+    }
+
     this.computeMatrix = function () {
         let matrix = m4.identity();
         matrix = m4.translate(matrix, objPosition.x, objPosition.y, objPosition.z);

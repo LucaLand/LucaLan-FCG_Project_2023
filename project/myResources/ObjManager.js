@@ -108,7 +108,11 @@ let ObjManager = function (){
     this.duplicateObj = function (objMesh){
         if(objList.includes(objMesh)){
             let duplicateObj = new ObjMesh(idMesh++, objMesh.name, objMesh.mesh, objMesh.meshData);
+            duplicateObj.setRotation(objMesh.getRotation()[0], objMesh.getRotation()[1], objMesh.getRotation()[2]);
+            duplicateObj.setPosition(objMesh.getPosition()[0], objMesh.getPosition()[1], objMesh.getPosition()[2]);
+            duplicateObj.setScale(objMesh.getScale()[0], objMesh.getScale()[1], objMesh.getScale()[2]);
             objList.push(duplicateObj);
+            return duplicateObj;
         }
         return null;
     }
