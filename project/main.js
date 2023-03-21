@@ -11,9 +11,16 @@ const Main = function() {
     let camera = canvas1GlDrawer.getCamera();
     let objManager = new ObjManager();
     let userInputHandler = new UserInputHandler(canvas1GlDrawer.getCamera(), canvas1GlDrawer.getCanvas());
+    let skybox1 = new Skybox(canvas1GlDrawer.getGL(), canvas1GlDrawer.getPrograms().SkyBoxProgramInfo);
+    canvas1GlDrawer.setSkybox(skybox1);
 
     let canvas2GlDrawer = new GLDrawer("canvas-2");
     canvas2GlDrawer.enableCullFace(false);
+    let skybox2 = new Skybox(canvas2GlDrawer.getGL(), canvas2GlDrawer.getPrograms().SkyBoxProgramInfo);
+    canvas2GlDrawer.setSkybox(skybox2);
+
+    let nightSkybox1 = new NightSkybox(canvas1GlDrawer.getGL(), canvas1GlDrawer.getPrograms().SkyBoxProgramInfo);
+    let nightSkybox2 = new NightSkybox(canvas2GlDrawer.getGL(), canvas2GlDrawer.getPrograms().SkyBoxProgramInfo);
 
     //CREAZIONE SCENA
     //Camera OBJ
@@ -29,15 +36,10 @@ const Main = function() {
     torreEiffelObj.setScale(scale, scale, scale);
     torreEiffelObj.setPosition(25, scale, 25);
 
-    // const building_04 = objManager.loadObj("Building04", "assets/objs/building_04_nopack.obj");
-    // building_04.setScale(scale*5, scale*5, scale*5);
-    // building_04.setPosition(-40, scale/2, -30);
-
     const cortile_pareti = objManager.loadObj("pareti-cortile", "assets/objs/cortile-pareti.obj");
     cortile_pareti.setScale(scale,scale,scale);
     cortile_pareti.setPosition(0, scale/4, 0);
     cortile_pareti.setShadowRender(false);
-
 
 
     //USER INPUTS Handlers
@@ -49,9 +51,9 @@ const Main = function() {
     //LIGHT TEST
     let light = new Light();
     light.setSunLight();
-
     canvas1GlDrawer.setLight(light);
 
+    let night = false;
     //draw with starting time 0
     let then = 0;
     drawScene(0);
@@ -96,11 +98,13 @@ const Main = function() {
     function handleSettings(settings) {
         let time = settings.time;
         if(time < 50 && time >= 0){
+            setNight(false);
             light.updateTime(time);
         }else if(time < 0){
             settings.time = 0;
         }else if(time <= 100 && time >= 50){
-            //TODO. night = true;
+            setNight(true);
+            light.updateTime(time);
         }else if(time > 100){
             settings.time = 100
         }
@@ -160,6 +164,21 @@ const Main = function() {
             buttonFoto.setAttribute("class", "");
         } else {
             buttonFoto.setAttribute("class", "invisible");
+        }
+    }
+
+    function setNight(bool){
+        if(night !== bool) {
+            night = bool;
+            if (bool) {
+                light.setSpotLight();
+                canvas1GlDrawer.setSkybox(nightSkybox1);
+                canvas2GlDrawer.setSkybox(nightSkybox2);
+            } else {
+                light.setSunLight();
+                canvas1GlDrawer.setSkybox(skybox1);
+                canvas2GlDrawer.setSkybox(skybox2);
+            }
         }
     }
 

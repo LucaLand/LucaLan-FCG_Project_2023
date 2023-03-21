@@ -121,12 +121,25 @@ const Light = function () {
     }
 
     this.updateTime = function (time){
-        this.setLightPosition(-(time*2 - 25*2), 100, -50+Math.abs(time - 25));
-        this.setLightTarget(time * 4 - 25 * 4, 0, 0);
+        if(!perspective) {
+            this.setLightPosition(-(time * 2 - 25 * 2), 100, -50 + Math.abs(time - 25));
+            this.setLightTarget(time * 4 - 25 * 4, 0, 0);
+        }
     }
 
 
     this.setSpotLight = function (){
-
+        perspective = true;
+        this.bias = -0.0001;
+        this.setLightPosition(-5, 20, 20);
+        this.setLightTarget(60, 6, 10);
+        this.setLightFov(100);
+        this.near = 0.4;
+        this.far = 100;
+        this.projHeight = 80;
+        this.projWidth = 80;
+        colorLightVec4 = [1.0, 0.95, 0.90, 1.0];
+        this.innerLimit = 0.999999999; //Math.cos(degToRad(lightFov / 2 - 10));
+        this.outerLimit = 0.9; //Math.cos(degToRad(lightFov / 2));
     }
 }

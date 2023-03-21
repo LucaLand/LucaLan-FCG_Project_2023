@@ -1,5 +1,5 @@
 "use strict";
-let Skybox = function (gl, SkyBoxProgramInfo) {
+let NightSkybox = function (gl, SkyBoxProgramInfo) {
     this.skyboxProgramInfo = SkyBoxProgramInfo;
     this.texture = null;
 
@@ -7,27 +7,27 @@ let Skybox = function (gl, SkyBoxProgramInfo) {
         const faceInfos = [
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-                url: 'assets/city-sky/paris-1.png',
+                url: 'assets/city-sky/paris-night-1.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-                url: 'assets/city-sky/paris-3.png',
+                url: 'assets/city-sky/paris-night-3.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-                url: 'assets/city-sky/paris-2.png',
+                url: 'assets/city-sky/paris-night-2.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-                url: 'assets/city-sky/paris-4.png',
+                url: 'assets/city-sky/paris-night-4.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-                url: 'assets/city-sky/paris-5sky.png',
+                url: 'assets/city-sky/paris-night-5sky.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-                url: 'assets/city-sky/paris-6bottom.png',
+                url: 'assets/city-sky/paris-night-6bottom.png',
             },
         ];
 

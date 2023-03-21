@@ -29,7 +29,7 @@ const GLDrawer = function (canvasId){
 
     let camera = new CameraManager(gl);
     let light = new Light();
-    this.skybox = new Skybox(gl, programs.SkyBoxProgramInfo);
+    let skybox = new Skybox(gl, programs.SkyBoxProgramInfo);
     let cullFace = true;
     let frustum = true;
 
@@ -63,6 +63,18 @@ const GLDrawer = function (canvasId){
 
     this.getLight = function (){
         return light;
+    }
+
+    this.getPrograms = function (){
+        return programs;
+    }
+
+    this.setSkybox = function (newSkybox) {
+        skybox = newSkybox;
+    }
+
+    this.getSkybox = function () {
+        return skybox;
     }
 
     //MAIN FUNC DRAW
@@ -309,8 +321,8 @@ const GLDrawer = function (canvasId){
     }
 
     this.drawSkybox = function (){
-        this.preRender();
-        this.skybox.drawSkybox(camera);
+        // this.preRender();
+        skybox.drawSkybox(gl, camera);
     }
 
     function createDepthTexture(gl){
