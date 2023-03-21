@@ -214,7 +214,7 @@
           float dotFromDirection = dot(surfaceToLightDirection,
                                        -u_lightDirection);
           float limitRange = u_innerLimit - u_outerLimit;
-          float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.0, 1.0);
+          float inLight = clamp((dotFromDirection - u_outerLimit) / limitRange, 0.15, 1.0);
           float light = inLight * dot(normal, surfaceToLightDirection);
           float specular = inLight * pow(dot(normal, halfVector), shininess);
 
@@ -229,7 +229,7 @@
 
           // the 'r' channel has the depth values
           float projectedDepth = texture2D(u_projectedTexture, projectedTexcoord.xy).r;
-          float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;
+          float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.3 : 1.0;
 
           vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorLight;
           gl_FragColor = vec4(
@@ -274,7 +274,7 @@
     <div id="menu-container">
         <div id="menu-button" onclick="toggleMenu()">MENU</div>
         <div id="ui-container" class = "closed">
-            <label for="inputTime">TIME</label> <input id="inputTime" type="number" value="1">
+            <label for="inputTime">TIME</label> <input id="inputTime" type="number" value="50">
             <br>
         </div>
     </div>
@@ -302,6 +302,7 @@
 <!--    My Script   -->
 <script type="text/javascript" src="myResources/GLDrawer.js"></script>
 <script type="text/javascript" src="myResources/Skybox.js"></script>
+<script type="text/javascript" src="myResources/NightSkybox.js"></script>
 <script type="text/javascript" src="myResources/CameraManager.js"></script>
 <script type="text/javascript" src="myResources/ObjManager.js"></script>
 <script type="text/javascript" src="myResources/ObjMesh.js"></script>
