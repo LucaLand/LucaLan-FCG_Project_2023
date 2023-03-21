@@ -41,6 +41,10 @@ const Main = function() {
     cortile_pareti.setPosition(0, scale/4, 0);
     cortile_pareti.setShadowRender(false);
 
+    const lampione = objManager.loadObj("lampione", "assets/objs/Street Lamp/StreetLamp.obj");
+    lampione.setScale(scale*3/2,scale*3/2,scale*3/2);
+    lampione.setPosition(-30, 32, 25);
+
 
     //USER INPUTS Handlers
     userInputHandler.setMovementTarget(objCamera);
@@ -54,6 +58,7 @@ const Main = function() {
     canvas1GlDrawer.setLight(light);
 
     let night = false;
+    let animate = 0, i=0;
     //draw with starting time 0
     let then = 0;
     drawScene(0);
@@ -93,6 +98,17 @@ const Main = function() {
 
         //Draw the scene with all the Geometries loaded
         canvas1GlDrawer.drawSceneWObjects(objManager.getAllObjMesh());
+
+        if(animate !== 0){
+            i += animate;
+            light.setLightTarget(2*i, i/2, 20);
+            if(i > 50){
+                animate = -1;
+            }else if(i < 0){
+                animate=  1;
+            }
+        }
+
     }
 
     function handleSettings(settings) {
