@@ -195,7 +195,13 @@
         uniform vec4 u_colorLight;
         uniform sampler2D u_texture;
         uniform sampler2D u_projectedTexture;
+        uniform vec3 diffuse;
+        uniform vec3 ambient;
+        uniform vec3 emissive;
+        uniform vec3 u_specular;
         uniform float shininess;
+        uniform float opacity;
+        uniform vec3 u_ambientLight;
         uniform vec3 u_lightDirection;
         uniform float u_innerLimit;          // in dot space
         uniform float u_outerLimit;          // in dot space
@@ -232,11 +238,27 @@
           float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.3 : 1.0;
 
           vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorLight;
-          gl_FragColor = vec4(
-              texColor.rgb * light * shadowLight +
-              specular * shadowLight,
-              texColor.a);
+
+          //Merging shader with phong
+         // vec4 diffuseMapColor = texture2D(u_texture, v_texcoord);
+         // float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+         // vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * u_colorLight.rgb;
+         // float effectiveOpacity = opacity * diffuseMapColor.a;
+
+         // gl_FragColor = vec4(
+         //   emissive +
+         //   ambient * u_ambientLight * shadowLight +
+         //   effectiveDiffuse * fakeLight * shadowLight +
+         //   u_specular * specular * shadowLight,
+         //   effectiveOpacity);
+
+         gl_FragColor = vec4(
+                      texColor.rgb * light * shadowLight +
+                      texColor.rgb * specular * shadowLight,
+                      texColor.a);
+
         }
+
     </script>
     <!-- COLOR Shaders -->
     <script  id="color-vertex-shader" type="x-shader/x-vertex">
