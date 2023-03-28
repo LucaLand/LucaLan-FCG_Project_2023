@@ -31,7 +31,7 @@ const GLDrawer = function (canvasId){
     let light = new Light();
     let skybox = new Skybox(gl, programs.SkyBoxProgramInfo);
     let cullFace = true;
-    let frustum = true;
+    let frustum = false;
 
     const depthTextureObj = createDepthTexture(gl);
     let texture;
@@ -300,6 +300,9 @@ const GLDrawer = function (canvasId){
 
     this.loadDefaultTexture = function (){
         let gl = this.getGL();
+        //TODO. Object material color (if possible, can pass the material color to the defaultTecture color above)
+        // texture = null;
+        // return;
 
         texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
