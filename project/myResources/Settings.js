@@ -5,9 +5,11 @@ const Settings = {
     sun: true,
     lamps: false,
     shadows: true,
-    reflections: true,
-    transparency: true,
-    fov: degToRad(60),
     filterColors: [0.2, 0.2, 0.2], //Light color
-    enableCullFace: true
+    enableCullFace: true,
+    reflections: true,
+    lampType: 1,
+    animation: false,
+    frustum: false,
+    transparency: true
 }

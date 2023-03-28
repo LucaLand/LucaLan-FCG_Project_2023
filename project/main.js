@@ -133,17 +133,21 @@ const Main = function() {
 
     function handleSettings(settings) {
         let time = settings.time;
-        if(time < 50 && time >= 0){
-            setNight(false);
+        if(time < 50 && time >= 0) {
+            // setNight(false);
             light.updateTime(time);
-        }else if(time < 0){
-            settings.time = 0;
-        }else if(time <= 100 && time >= 50){
-            setNight(true);
-            light.updateTime(time);
-        }else if(time > 100){
-            settings.time = 100
         }
+
+        if(settings.sun)
+            setNight(false);
+        else
+            setNight(true);
+
+        if(settings.animation)
+            animate = 1;
+        else
+            animate = 0;
+
     }
 
     function pushSettingsInUI(){
@@ -152,8 +156,37 @@ const Main = function() {
 
     function pullSettingsFromUI(){
         let inputTime = document.getElementById("inputTime");
-        // console.log(inputTime.getAttribute("value"))
+        if(inputTime.value > 49)
+            inputTime.value = 49;
+        if(inputTime.value < 0)
+            inputTime.value = 0;
         Settings.time = inputTime.value;
+
+        let sun = document.getElementById("checkerSun");
+        Settings.sun = sun.checked;
+
+        let shadows = document.getElementById("shadows");
+        Settings.shadows = shadows.checked;
+
+        let lightColor = document.getElementById("lightColor");
+        console.log(lightColor.value);
+
+        let backFaceCulling = document.getElementById("backFaceCulling");
+        Settings.enableCullFace = backFaceCulling.checked;
+
+        let lampType = document.getElementById("lampType");
+        if(lampType.value < 1)
+            lampType.value = 1;
+        if(lampType.value > 3)
+            lampType.value = 3;
+        Settings.lampType = lampType.value;
+
+        let animation = document.getElementById("animation");
+        Settings.animation = animation.checked;
+
+        let frustumDraw = document.getElementById("frustum");
+        Settings.frustum = frustumDraw.checked;
+
     }
 
     this.changeVisualMode = function (){
