@@ -120,13 +120,16 @@ const Main = function() {
         canvas1GlDrawer.drawSceneWObjects(objManager.getAllObjMesh());
 
         if(animate !== 0){
-            i += animate;
             light.setLightTarget(2*i, i/2, 20);
             if(i > 50){
                 animate = -1;
             }else if(i < 0){
-                animate=  1;
+                animate =  1;
             }
+            console.log("animate:" + animate)
+            i += animate;
+            console.log("animate:" + animate)
+            console.log("i: " + i);
         }
 
     }
@@ -134,7 +137,6 @@ const Main = function() {
     function handleSettings(settings) {
         let time = settings.time;
         if(time < 50 && time >= 0) {
-            // setNight(false);
             light.updateTime(time);
         }
 
@@ -143,9 +145,9 @@ const Main = function() {
         else
             setNight(true);
 
-        if(settings.animation)
+        if(settings.animation && animate === 0)
             animate = 1;
-        else
+        else if(!settings.animation)
             animate = 0;
 
     }
@@ -235,10 +237,13 @@ const Main = function() {
     }
 
     function setNight(bool){
+        if(bool){
+            light.setSpotLight(Settings.lampType);
+        }
         if(night !== bool) {
             night = bool;
             if (bool) {
-                light.setSpotLight(1);
+                light.setSpotLight(Settings.lampType);
                 canvas1GlDrawer.setSkybox(nightSkybox1);
                 canvas2GlDrawer.setSkybox(nightSkybox2);
             } else {
