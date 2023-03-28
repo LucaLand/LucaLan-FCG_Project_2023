@@ -1,7 +1,5 @@
 "use strict";
 
-// const envmapProgramInfo = webglUtils.createProgramInfo(GlDrawer.gl, ["envmap-vertex-shader", "envmap-fragment-shader"]);
-// const program = webglUtils.createProgramFromScripts(GlDrawer.gl, ["3d-vertex-shader", "3d-fragment-shader"]);
 
 let photo = 0;
 
@@ -25,25 +23,47 @@ const Main = function() {
     //CREAZIONE SCENA
     //Camera OBJ
     const objCamera = objManager.loadObj("camera", "assets/objs/DigitalCamera_v3_L3.123c1cb807d5-2d9f-49cf-a1e4-b466a061bb87/10818_DigitalCamera_v2.obj");
-    objCamera.setPosition(0, 1, 0);
+    objCamera.setPosition(0, 2, -55);
 
     let scale= 50;
     const sanpietriniStreet = objManager.loadObj("strada", "assets/objs/sanpietrini_street.obj");
-    sanpietriniStreet.setScale(100, 0.1, 100);
+    sanpietriniStreet.setScale(100, 0.1, 200);
     sanpietriniStreet.setPosition(0, 0, 0);
 
     const torreEiffelObj = objManager.loadObj("Eiffel", "assets/objs/Torre-Eiffel.obj");
     torreEiffelObj.setScale(scale, scale, scale);
     torreEiffelObj.setPosition(25, scale, 25);
 
-    const cortile_pareti = objManager.loadObj("pareti-cortile", "assets/objs/cortile-pareti.obj");
-    cortile_pareti.setScale(scale,scale,scale);
-    cortile_pareti.setPosition(0, scale/4, 0);
-    cortile_pareti.setShadowRender(false);
+    // const cortile_pareti = objManager.loadObj("pareti-cortile", "assets/objs/cortile-pareti.obj");
+    const cortile_pareti = objManager.loadObj("pareti-cortile", "assets/objs/PorticoStart_2.obj");
+    cortile_pareti.setScale(scale,scale,scale*1.5);
+    cortile_pareti.setPosition(60, scale/4, 0);
+    // cortile_pareti.setShadowRender(false);
+
+    const parete2 = objManager.duplicateObj(cortile_pareti);
+    parete2.setRotation(0, degToRad(180), 0);
+    parete2.setPosition(-35, scale/4, 0);
+
+    const cortile_front = objManager.loadObj("front-cortile", "assets/objs/PorticoStart_Front.obj");
+    cortile_front.setScale(scale,scale,scale);
+    cortile_front.setPosition(15, scale/4, 60);
+    cortile_front.setRotation(0, degToRad(-90), 0);
 
     const lampione = objManager.loadObj("lampione", "assets/objs/Street Lamp/StreetLamp.obj");
-    lampione.setScale(scale*3/2,scale*3/2,scale*3/2);
-    lampione.setPosition(-30, 32, 25);
+    lampione.setScale(scale*2/2,scale*3/2,scale*2/2);
+    lampione.setPosition(-22, 32, 25);
+
+    const panchina = objManager.loadObj("panchina", "assets/objs/Bench/bench.obj");
+    panchina.setScale(5, 5, 5);
+    panchina.setPosition(2, 2, 38);
+    panchina.setRotation(0,degToRad(90), 0);
+
+    const panchina2 = objManager.duplicateObj(panchina);
+    panchina2.setPosition(2, 2, 12);
+
+    const panchina3 = objManager.duplicateObj(panchina);
+    panchina3.setPosition(20, 2, 2);
+    panchina3.setRotation(0,0,0);
 
 
     //USER INPUTS Handlers
@@ -143,8 +163,6 @@ const Main = function() {
     function drawPhoto() {
         canvas2GlDrawer.setCamera(canvas1GlDrawer.getCamera());
         canvas2GlDrawer.setLight(canvas1GlDrawer.getLight());
-        canvas2GlDrawer.preRender();
-        canvas2GlDrawer.drawSkybox();
         canvas2GlDrawer.drawSceneWObjects(objManager.getAllObjMesh());
     }
 
@@ -187,7 +205,7 @@ const Main = function() {
         if(night !== bool) {
             night = bool;
             if (bool) {
-                light.setSpotLight();
+                light.setSpotLight(1);
                 canvas1GlDrawer.setSkybox(nightSkybox1);
                 canvas2GlDrawer.setSkybox(nightSkybox2);
             } else {
