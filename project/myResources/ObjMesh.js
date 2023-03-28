@@ -36,6 +36,13 @@ let ObjMesh = function (id, name, mesh, meshData){
     let objPosition = {x:0, y:0, z:0};
     let objRotation = {x:0, y:0, z:0};
     let objScale = {x:1, y:1, z:1};
+    let activateLimit = false;
+    this.xPLimit=100;
+    this.xNegLimit=-100;
+    this.yPLimit=100;
+    this.yNegLimit=-100;
+    this.zPLimit=100;
+    this.zNegLimit=-100;
 
 
     this.getObjUniforms = function () {
@@ -63,9 +70,19 @@ let ObjMesh = function (id, name, mesh, meshData){
     }
 
     this.translate = function (dx, dy, dz){
-        objPosition.x += dx;
-        objPosition.y += dy;
-        objPosition.z += dz;
+        let x = dx + objPosition.x, y = dy + objPosition.y, z = dz + objPosition.z;
+        if(activateLimit){
+            if(x <= this.xPLimit && x >= this.xNegLimit)
+                objPosition.x = x;
+            if(y <= this.yPLimit && y >= this.yNegLimit)
+                objPosition.y = y;
+            if(z <= this.zPLimit && z >= this.zNegLimit)
+                objPosition.z = z;
+        }else {
+            objPosition.x += dx;
+            objPosition.y += dy;
+            objPosition.z += dz;
+        }
     }
 
     this.rotate = function (dx, dy, dz){
@@ -120,6 +137,14 @@ let ObjMesh = function (id, name, mesh, meshData){
 
     this.setShadowRender = function (bool){
         this.shadow = bool;
+    }
+
+    this.activateLimits = function (bool){
+        activateLimit = bool;
+    }
+
+    this.getLimitActivated = function (){
+        return activateLimit;
     }
 
 

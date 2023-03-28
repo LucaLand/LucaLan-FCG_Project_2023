@@ -21,6 +21,7 @@ const UserInputHandler = function (cam, canvas){
     let oldCameraMode = cameraMode;
     let angle = 0, angleVertical = 0;
     let step = 0.5;
+    let limitXP = 60, limitXNeg = -35, limitZP = 60, limitZNeg = -80;
 
     this.attachDefaultHandler = function (object, eventType){
         console.log("Adding event listener for Obj:" + object +" eType:" + eventType);
@@ -135,6 +136,7 @@ const UserInputHandler = function (cam, canvas){
 
     const keyDownHandlerMap = function (e){
         if(targetObjMesh !== null) {
+            activateObjLimits();
             switch (e.code) {
                 case "KeyW":
                     targetObjMesh.move(directions.Forward, step);
@@ -189,6 +191,14 @@ const UserInputHandler = function (cam, canvas){
             }
         }
         console.log(e);
+    }
+
+    function activateObjLimits(){
+        targetObjMesh.activateLimits(true);
+        targetObjMesh.xPLimit = limitXP;
+        targetObjMesh.xNegLimit = limitXNeg;
+        targetObjMesh.zPLimit = limitZP;
+        targetObjMesh.zNegLimit = limitZNeg;
     }
 
     const eventHandlerArrayMapThirdPerson = [
