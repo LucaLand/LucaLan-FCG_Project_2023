@@ -78,7 +78,7 @@ const Main = function() {
 
     //LIGHT TEST
     let light = new Light();
-    light.setSunLight();
+    light.setSunLight(Settings.time);
     canvas1GlDrawer.setLight(light);
 
     let night = false;

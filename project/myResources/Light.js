@@ -109,18 +109,22 @@ const Light = function () {
         return lightProjectionMatrix;
     }
 
-    this.setSunLight = function (){
+    this.setSunLight = function (time = null){
         perspective = false;
         this.bias = -0.007;
         this.setLightPosition(0, 100, 0);
         this.setLightTarget(0,0,0);
         this.near = 0.1;
         this.far = 150;
-        this.projHeight = 150;
-        this.projWidth = 150;
+        this.projHeight = 180;
+        this.projWidth = 180;
         colorLightVec4 = [1.0, 0.95, 0.85, 1.0];
         this.innerLimit = 0.9999;
         this.outerLimit = 0.1;
+
+        if(time !== null){
+            this.updateTime(time);
+        }
     }
 
     this.updateTime = function (time){
