@@ -80,7 +80,10 @@ const GLDrawer = function (canvasId){
     this.drawSceneWObjects = function (objMeshList){
         //Pre Render
         webglUtils.resizeCanvasToDisplaySize(gl.canvas);
-        gl.enable(gl.CULL_FACE);
+        if(cullFace)
+            gl.enable(gl.CULL_FACE);
+        else
+            gl.disable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
 
         if(light.enabledShadows){
