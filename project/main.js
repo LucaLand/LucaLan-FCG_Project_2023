@@ -7,7 +7,9 @@ const Main = function() {
     // Get A WebGL context
     let canvas1GlDrawer = new GLDrawer("my_Canvas");
     let camera = canvas1GlDrawer.getCamera();
-    let objManager = new ObjManager();
+    let objManagerLight = new ObjManager()
+    let objManagerFull = new ObjManager();
+    let objManager = objManagerFull;
     let userInputHandler = new UserInputHandler(canvas1GlDrawer.getCamera(), canvas1GlDrawer.getCanvas());
     let skybox1 = new Skybox(canvas1GlDrawer.getGL(), canvas1GlDrawer.getPrograms().SkyBoxProgramInfo);
     canvas1GlDrawer.setSkybox(skybox1);
@@ -65,6 +67,8 @@ const Main = function() {
     panchina3.setPosition(20, 2, 2);
     panchina3.setRotation(0,0,0);
 
+    //Light Scene
+    objManagerLight.addLoadedMesh([objCamera, sanpietriniStreet, torreEiffelObj, cortile_front, cortile_pareti, parete2, lampione]);
 
     //USER INPUTS Handlers
     userInputHandler.setMovementTarget(objCamera);
@@ -150,6 +154,11 @@ const Main = function() {
         else if(!settings.animation)
             animate = 0;
 
+        if(settings.lightScene)
+            objManager = objManagerLight;
+        else
+            objManager = objManagerFull;
+
     }
 
     function pushSettingsInUI(){
@@ -188,6 +197,9 @@ const Main = function() {
 
         let frustumDraw = document.getElementById("frustum");
         Settings.frustum = frustumDraw.checked;
+
+        let lightScene = document.getElementById("lightScene");
+        Settings.lightScene = lightScene.checked;
 
     }
 

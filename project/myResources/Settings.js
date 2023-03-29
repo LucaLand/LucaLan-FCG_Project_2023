@@ -11,5 +11,6 @@ const Settings = {
     lampType: 1,
     animation: false,
     frustum: false,
-    transparency: true
+    transparency: true,
+    lightScene: false
 }
