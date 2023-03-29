@@ -130,7 +130,7 @@ const Light = function () {
     }
 
 
-    this.setSpotLight = function (number){
+    this.setSpotLight = function (number = 1){
         perspective = true;
         this.bias = -0.0001;
         this.near = 0.4;
@@ -140,21 +140,21 @@ const Light = function () {
         this.innerLimit = 0.999999999;
         this.outerLimit = 0.80;
         switch (number) {
-            case 1: //Lampione alto sulla Torre Eiffel
+            case "1": //Lampione alto sulla Torre Eiffel
                 this.setLightPosition(-5, 20, 20);
                 this.setLightTarget(60, 6, 10);
                 this.setLightFov(120);
                 colorLightVec4 = [1.0, 0.95, 0.90, 1.0];
                 this.outerLimit = 0.91;
                 break;
-            case 2: //Lampione 2 basso
+            case "2": //Lampione 2 basso
                 this.setLightPosition(-5, 20, 20);
                 this.setLightTarget(-5, 0, 20);
                 this.setLightFov(130);
                 colorLightVec4 = [0.8, 0.70, 0.6, 1.0];
                 this.outerLimit = 0.5;
                 break;
-            case 3: //Lampione 3 basso
+            case "3": //Lampione 3 basso
                 this.setLightPosition(-5, 20, 20);
                 this.setLightTarget(0, 0, 0);
                 this.setLightFov(130);

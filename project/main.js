@@ -82,7 +82,7 @@ const Main = function() {
     canvas1GlDrawer.setLight(light);
 
     let night = false;
-    let animate = 0, i=0;
+    let animate = 0, i=0, lampType = 1;
     //draw with starting time 0
     let then = 0;
     drawScene(0);
@@ -155,6 +155,12 @@ const Main = function() {
             objManager = objManagerLight;
         else
             objManager = objManagerFull;
+
+        if(settings.lampType !== lampType){
+            lampType = settings.lampType;
+            if(night)
+                light.setSpotLight(lampType);
+        }
 
     }
 
@@ -248,13 +254,10 @@ const Main = function() {
     }
 
     function setNight(bool){
-        if(bool){
-            light.setSpotLight(Settings.lampType);
-        }
         if(night !== bool) {
             night = bool;
             if (bool) {
-                light.setSpotLight(Settings.lampType);
+                light.setSpotLight(lampType);
                 canvas1GlDrawer.setSkybox(nightSkybox1);
                 canvas2GlDrawer.setSkybox(nightSkybox2);
             } else {
