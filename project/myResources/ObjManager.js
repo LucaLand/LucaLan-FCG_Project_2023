@@ -99,6 +99,16 @@ let ObjManager = function (){
         return newObj;
     }
 
+    this.addLoadedMesh = function (objMeshArray = []){
+        if(Array.isArray(objMeshArray)){
+            objMeshArray.forEach(mesh => {
+                objList.push(mesh);
+            })
+        }else {
+            objList.push(objMeshArray);
+        }
+    }
+
     function loadTextureImage(textureImagePath){
         const image = new Image();
         image.src = textureImagePath;
