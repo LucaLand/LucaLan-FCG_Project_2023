@@ -297,7 +297,7 @@
         <div id="menu-button" onclick="toggleMenu()">MENU</div>
         <div id="ui-container" class = "closed">
             <br>
-            <label for="inputTime">TIME</label> <input id="inputTime" type="number" value="1">
+            <label for="inputTime">TIME</label> <input id="inputTime" type="number" value="1" onchange="main.pullSettingsFromUI()">
             <br>
             <label for="checkerSun">SUN</label> <input id="checkerSun" type="checkbox" checked onchange="main.pullSettingsFromUI()"> <br>
             <label for="shadows">SHADOWS</label> <input id="shadows" type="checkbox" checked onchange="main.pullSettingsFromUI()"> <br>
