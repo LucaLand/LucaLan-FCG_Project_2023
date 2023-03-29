@@ -83,11 +83,12 @@ body * {
 #ui-container {
     transition: 1s;
     float: left;
+    padding-top: 40px;
 }
 
 #ui-container.opened {
     width: 230px;
-    border: 2px solid red;
+    /*border: 2px solid red;*/
     height: 100%;
 }
 
@@ -101,7 +102,7 @@ body * {
 }
 
 #ui-container * {
-    margin: 30px 1vw;
+    margin: 3px 1vw;
 }
 
 #my_Canvas.opened {
