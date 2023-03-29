@@ -12,6 +12,7 @@ const Light = function () {
 
     let perspective = false;
     this.enabledShadows = true;
+    this.enableFrustumDraw = false;
     this.innerLimit = 0.9999;
     this.outerLimit = 0.1;
     this.near = 0.4;

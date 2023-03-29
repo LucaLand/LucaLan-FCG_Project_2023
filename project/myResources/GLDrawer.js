@@ -31,7 +31,6 @@ const GLDrawer = function (canvasId){
     let light = new Light();
     let skybox = new Skybox(gl, programs.SkyBoxProgramInfo);
     let cullFace = true;
-    let frustum = false;
 
     const depthTextureObj = createDepthTexture(gl);
     let texture;
@@ -105,7 +104,7 @@ const GLDrawer = function (canvasId){
             this.objDraw(objmesh);
         })
 
-        if(frustum)
+        if(light.enableFrustumDraw)
             this.drawFrustum();
     }
 
