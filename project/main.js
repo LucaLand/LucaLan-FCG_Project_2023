@@ -93,9 +93,6 @@ const Main = function() {
         time *= 0.001; //convert to seconds
         let deltaTime = time - then;  // Subtract the previous time from the current time
 
-        pullSettingsFromUI();
-        handleSettings(Settings);
-
         updateVisualAndUI();
 
         if(photo !== 0 && photo <= 30){
@@ -165,7 +162,7 @@ const Main = function() {
 
     }
 
-    function pullSettingsFromUI(){
+    this.pullSettingsFromUI = function (){
         let inputTime = document.getElementById("inputTime");
         if(inputTime.value > 49)
             inputTime.value = 49;
@@ -201,6 +198,8 @@ const Main = function() {
         let lightScene = document.getElementById("lightScene");
         Settings.lightScene = lightScene.checked;
 
+        //Handle them
+        handleSettings(Settings);
     }
 
     this.changeVisualMode = function (){
