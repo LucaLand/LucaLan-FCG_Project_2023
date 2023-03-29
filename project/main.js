@@ -135,7 +135,7 @@ const Main = function() {
 
     }
 
-    function handleSettings(settings) {
+    function handleSettings(settings, changeName) {
         let time = settings.time;
         if(time < 50 && time >= 0) {
             light.updateTime(time);
@@ -165,15 +165,15 @@ const Main = function() {
         light.enabledShadows = settings.shadows;
         canvas1GlDrawer.enableCullFace(settings.enableCullFace);
         light.enableFrustumDraw = settings.frustum;
-
-
+        if(changeName === "lightColor")
+            light.setLightColorVec4(settings.lightColor[0], settings.lightColor[1], settings.lightColor[2]);
     }
 
     function pushSettingsInUI(){
 
     }
 
-    this.pullSettingsFromUI = function (){
+    this.pullSettingsFromUI = function (changeName){
         let inputTime = document.getElementById("inputTime");
         if(inputTime.value > 49)
             inputTime.value = 49;
@@ -187,8 +187,11 @@ const Main = function() {
         let shadows = document.getElementById("shadows");
         Settings.shadows = shadows.checked;
 
-        let lightColor = document.getElementById("lightColor");
-        console.log(lightColor.value);
+        let lightColor = document.getElementById("lightColor").value;
+        const red = parseInt(lightColor.substring(1, 3), 16)/255;
+        const green = parseInt(lightColor.substring(3, 5), 16)/255;
+        const blue = parseInt(lightColor.substring(5, 7), 16)/255;
+        Settings.lightColor = [red, green, blue];
 
         let backFaceCulling = document.getElementById("backFaceCulling");
         Settings.enableCullFace = backFaceCulling.checked;
@@ -210,7 +213,7 @@ const Main = function() {
         Settings.lightScene = lightScene.checked;
 
         //Handle them
-        handleSettings(Settings);
+        handleSettings(Settings, changeName);
     }
 
     this.changeVisualMode = function (){

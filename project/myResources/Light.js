@@ -43,11 +43,11 @@ const Light = function () {
         return ambientLight;
     }
 
-    this.setDirectionalLightColor = function (R = 1.0, G=1.0, B=1.0){
-        colorLight = [R, G, B];
+    this.setLightColorVec4 = function (R = 1.0, G=1.0, B=1.0){
+        colorLightVec4 = [R, G, B, 1.0];
     }
 
-    this.getDirectionalLightColor = function (){
+    this.getLightColor = function (){
         return colorLight;
     }
 

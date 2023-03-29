@@ -5,7 +5,7 @@ const Settings = {
     sun: true,
     lamps: false,
     shadows: true,
-    filterColors: [0.2, 0.2, 0.2], //Light color
+    lightColor: [0.2, 0.2, 0.2], //Light color
     enableCullFace: true,
     reflections: true,
     lampType: 1,
