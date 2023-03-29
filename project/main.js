@@ -121,16 +121,16 @@ const Main = function() {
         canvas1GlDrawer.drawSceneWObjects(objManager.getAllObjMesh());
 
         if(animate !== 0){
-            light.setLightTarget(2*i, i/2, 20);
-            if(i > 50){
+            if(night)
+                light.setLightTarget(2*i/2+5, i/6+4, 20);
+            else
+                light.updateTime(i/2);
+            if(i > 100){
                 animate = -1;
             }else if(i < 0){
                 animate =  1;
             }
-            console.log("animate:" + animate)
             i += animate;
-            console.log("animate:" + animate)
-            console.log("i: " + i);
         }
 
     }
