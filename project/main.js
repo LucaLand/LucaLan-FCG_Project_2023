@@ -162,6 +162,11 @@ const Main = function() {
                 light.setSpotLight(lampType);
         }
 
+        light.enabledShadows = settings.shadows;
+        canvas1GlDrawer.enableCullFace(settings.enableCullFace);
+        light.enableFrustumDraw = settings.frustum;
+
+
     }
 
     function pushSettingsInUI(){
