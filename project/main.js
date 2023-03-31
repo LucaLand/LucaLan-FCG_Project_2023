@@ -24,7 +24,7 @@ const Main = function() {
 
     //CREAZIONE SCENA
     //Camera OBJ
-    const objCamera = objManager.loadObj("camera", "assets/objs/DigitalCamera_v3_L3.123c1cb807d5-2d9f-49cf-a1e4-b466a061bb87/10818_DigitalCamera_v2.obj");
+    const objCamera = objManager.loadObj("camera", "assets/objs/DigitalCamera_v3_L3.123c1cb807d5-2d9f-49cf-a1e4-b466a061bb87/digital_camera_v3.obj");
     objCamera.setPosition(0, 2, -55);
 
     let scale= 50;
