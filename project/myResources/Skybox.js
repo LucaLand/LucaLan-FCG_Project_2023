@@ -1,35 +1,38 @@
 "use strict";
+let loaded = false;
 let Skybox = function (gl, SkyBoxProgramInfo) {
     this.skyboxProgramInfo = SkyBoxProgramInfo;
     this.texture = null;
 
+    const faceInfos = [
+        {
+            target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+            url: 'assets/city-sky/paris-1.png',
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+            url: 'assets/city-sky/paris-3.png',
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+            url: 'assets/city-sky/paris-2.png',
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+            url: 'assets/city-sky/paris-4.png',
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+            url: 'assets/city-sky/paris-5sky.png',
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+            url: 'assets/city-sky/paris-6bottom.png',
+        },
+    ];
+
     this.loadSkybox = function(){
-        const faceInfos = [
-            {
-                target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-                url: 'assets/city-sky/paris-1.png',
-            },
-            {
-                target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-                url: 'assets/city-sky/paris-3.png',
-            },
-            {
-                target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-                url: 'assets/city-sky/paris-2.png',
-            },
-            {
-                target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-                url: 'assets/city-sky/paris-4.png',
-            },
-            {
-                target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-                url: 'assets/city-sky/paris-5sky.png',
-            },
-            {
-                target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-                url: 'assets/city-sky/paris-6bottom.png',
-            },
-        ];
+
 
         // Create a texture.
         const texture = gl.createTexture();
@@ -57,7 +60,9 @@ let Skybox = function (gl, SkyBoxProgramInfo) {
                 gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
                 gl.texImage2D(target, level, internalFormat, format, type, image);
                 gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+                loaded = true;
             });
+            faceInfo.image = image;
         });
         gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
         gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);

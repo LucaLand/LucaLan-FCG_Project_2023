@@ -15,7 +15,7 @@ const Main = function() {
     canvas1GlDrawer.setSkybox(skybox1);
 
     let canvas2GlDrawer = new GLDrawer("canvas-2");
-    canvas2GlDrawer.enableCullFace(false);
+    // canvas2GlDrawer.enableCullFace(false);
     let skybox2 = new Skybox(canvas2GlDrawer.getGL(), canvas2GlDrawer.getPrograms().SkyBoxProgramInfo);
     canvas2GlDrawer.setSkybox(skybox2);
 
@@ -105,7 +105,7 @@ const Main = function() {
         }
 
         // If more than 0 result in laggin behaviour (tryed to maximize performance with deltaTime)
-        if(deltaTime >=0) {
+        if(deltaTime >=0 && loaded) {
             render(time);
         }
 
