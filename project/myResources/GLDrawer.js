@@ -33,7 +33,7 @@ const GLDrawer = function (canvasId){
     let cullFace = true;
 
     const depthTextureObj = createDepthTexture(gl);
-    let texture;
+    let texture, defaultTexture = loadDefaultTexture();
     let objRenderingProgramInfo = programs.MyProgramInfo;
 
     this.getGL = function (){
@@ -219,10 +219,14 @@ const GLDrawer = function (canvasId){
     }
 
     this.objDraw = function (objMesh, programInfo = objRenderingProgramInfo){
-        if(objMesh.textureImage !== null)
-            this.loadObjTextureIntoBuffer(objMesh.textureImage);
-        else
-            this.loadDefaultTexture();
+        if(objMesh.textureImage !== null) {
+            if(objMesh.texture === null) {
+                texture = this.loadObjTextureIntoBuffer(objMesh.textureImage);
+                objMesh.texture = texture;
+            }else
+                texture = objMesh.texture;
+        }else
+            texture = defaultTexture;
 
         drawObj(gl, objMesh, programInfo);
     }
@@ -281,14 +285,14 @@ const GLDrawer = function (canvasId){
     this.loadObjTextureIntoBuffer = function (textureImage){
         let gl = this.getGL();
 
-        texture = gl.createTexture();
+        let temptTexture = gl.createTexture();
         const level = 0;
         const internalFormat = gl.RGBA;
         const srcFormat = gl.RGBA;
         const srcType = gl.UNSIGNED_BYTE;
 
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.bindTexture(gl.TEXTURE_2D, temptTexture);
         gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,srcFormat, srcType, textureImage);
         if (isPowerOf2(textureImage.width) && isPowerOf2(textureImage.height))
             gl.generateMipmap(gl.TEXTURE_2D); // Yes, it's a power of 2. Generate mips.
@@ -298,16 +302,17 @@ const GLDrawer = function (canvasId){
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         }
+
+        return temptTexture;
     }
 
-    this.loadDefaultTexture = function (){
-        let gl = this.getGL();
+    function loadDefaultTexture(){
         //TODO. Object material color (if possible, can pass the material color to the defaultTecture color above)
         // texture = null;
         // return;
 
-        texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        let tempTexture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, tempTexture);
         const level = 0;
         const internalFormat = gl.RGBA;
         const width = 1;
@@ -317,6 +322,8 @@ const GLDrawer = function (canvasId){
         const srcType = gl.UNSIGNED_BYTE;
         const pixel = new Uint8Array([255, 255, 255, 255]);  // opaque blue
         gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, srcFormat, srcType, pixel);
+
+        return tempTexture;
     }
 
     this.multipleObjDraw = function (objMeshList){
