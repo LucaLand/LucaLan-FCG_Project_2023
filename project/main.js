@@ -163,6 +163,9 @@ const Main = function() {
         }
 
         light.enabledShadows = settings.shadows;
+        canvas1GlDrawer.reloadDepthTexture();
+        canvas2GlDrawer.reloadDepthTexture();
+
         canvas1GlDrawer.enableCullFace(settings.enableCullFace);
         light.enableFrustumDraw = settings.frustum;
         if(changeName === "lightColor")

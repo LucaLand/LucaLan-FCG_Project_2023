@@ -32,7 +32,7 @@ const GLDrawer = function (canvasId){
     let skybox = new Skybox(gl, programs.SkyBoxProgramInfo);
     let cullFace = true;
 
-    const depthTextureObj = createDepthTexture(gl);
+    let depthTextureObj = createDepthTexture(gl);
     let texture, defaultTexture = loadDefaultTexture();
     let objRenderingProgramInfo = programs.MyProgramInfo;
 
@@ -131,7 +131,7 @@ const GLDrawer = function (canvasId){
             //Fragment
             u_colorLight: light.getLightColorVec4(),
             u_texture: texture,
-            u_projectedTexture: depthTextureObj.depthTexture,
+            u_projectedTexture: depthTextureObj.depthTexture, // light.enabledShadows ? depthTextureObj.depthTexture : null,
             u_lightDirection: light.computeLightWorldMatrix().slice(8, 11).map(v => -v),
             u_innerLimit: light.innerLimit,
             u_outerLimit: light.outerLimit,
@@ -467,6 +467,11 @@ const GLDrawer = function (canvasId){
 
         // calls gl.drawArrays or gl.drawElements
         webglUtils.drawBufferInfo(gl, cubeLinesBufferInfo, gl.LINES);
+    }
+
+    this.reloadDepthTexture = function (){
+        console.log("Reloading shadows")
+        depthTextureObj = createDepthTexture(gl);
     }
 
 
