@@ -220,15 +220,32 @@ const GLDrawer = function (canvasId){
 
     this.objDraw = function (objMesh, programInfo = objRenderingProgramInfo){
         if(objMesh.textureImage !== null) {
-            if(objMesh.texture === null) {
+            texture = searchForTextureWithContext(objMesh.texture, canvasId);
+            if(texture === null) {
                 texture = this.loadObjTextureIntoBuffer(objMesh.textureImage);
-                objMesh.texture = texture;
-            }else
-                texture = objMesh.texture;
+                objMesh.texture.push({context:canvasId , tex:texture});
+                console.log("Texture null settata for ");
+            }
         }else
             texture = defaultTexture;
 
         drawObj(gl, objMesh, programInfo);
+    }
+
+    function searchForTextureWithContext(objMeshTextures, contextCanvas){
+        let tex = null;
+        if(objMeshTextures === [] || objMeshTextures === null) {
+            console.log("Texture null or empty")
+            return null;
+        }
+
+        objMeshTextures.forEach(pair =>{
+            if(pair.context === contextCanvas){
+                tex = pair.tex;
+            }
+        });
+
+        return tex;
     }
 
     function drawObj(gl, objMesh, programInfo){

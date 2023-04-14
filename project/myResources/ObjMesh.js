@@ -30,8 +30,7 @@ let ObjMesh = function (id, name, mesh, meshData){
     this.opacity = meshData.opacity;   //Ni
     this.meshMatrix = m4.identity(); //Obj world matrix
 
-    this.texture = null;
-
+    this.texture = [];
     //Controls if an object emit shadows or not
     this.shadow = true;
 
