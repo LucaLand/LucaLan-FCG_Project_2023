@@ -27,6 +27,10 @@ const Main = function() {
     const objCamera = objManager.loadObj("camera", "assets/objs/DigitalCamera_v3_L3.123c1cb807d5-2d9f-49cf-a1e4-b466a061bb87/digital_camera_v3.obj");
     objCamera.setPosition(0, 2, -55);
 
+    const pannelloFoto = objManager.loadObj("pannelloFoto", "assets/objs/PannelloFoto/PannelloFoto.obj");
+    pannelloFoto.setPosition(3.2, 3, 12);
+    pannelloFoto.setRotation(0,degToRad(180), 0);
+
     let scale= 50;
     const sanpietriniStreet = objManager.loadObj("strada", "assets/objs/sanpietrini_street.obj");
     sanpietriniStreet.setScale(100, 0.1, 200);
