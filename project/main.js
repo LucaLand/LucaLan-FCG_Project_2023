@@ -32,7 +32,7 @@ const Main = function() {
     pannelloFoto.setRotation(0,degToRad(180), 0);
 
     let scale= 50;
-    const sanpietriniStreet = objManager.loadObj("strada", "assets/objs/sanpietrini_street.obj");
+    const sanpietriniStreet = objManager.loadObj("strada", "assets/objs/sanpietrini_street/sanpietrini_street.obj");
     sanpietriniStreet.setScale(100, 0.1, 200);
     sanpietriniStreet.setPosition(0, 0, 0);
 
