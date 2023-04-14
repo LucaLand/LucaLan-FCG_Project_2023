@@ -7,19 +7,19 @@ let Skybox = function (gl, SkyBoxProgramInfo) {
     const faceInfos = [
         {
             target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-            url: 'assets/city-sky/paris-1.png',
+            url: 'assets/city-sky/paris2-1.png',
         },
         {
             target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-            url: 'assets/city-sky/paris-3.png',
+            url: 'assets/city-sky/paris2-3.png',
         },
         {
             target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-            url: 'assets/city-sky/paris-2.png',
+            url: 'assets/city-sky/paris2-2.png',
         },
         {
             target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-            url: 'assets/city-sky/paris-4.png',
+            url: 'assets/city-sky/paris2-4.png',
         },
         {
             target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
@@ -27,7 +27,7 @@ let Skybox = function (gl, SkyBoxProgramInfo) {
         },
         {
             target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-            url: 'assets/city-sky/paris-6bottom.png',
+            url: 'assets/city-sky/paris2-6bottom.png',
         },
     ];
 
