@@ -19,7 +19,6 @@ body * {
 }
 
 .canvas {
-    /*padding: 2px;*/
     box-sizing: border-box;
     background: #ffffff;
     border: 1px solid #aaaaaa;
@@ -29,6 +28,14 @@ body * {
     height: 100%;
     float: left;
     transition: 1s;
+}
+
+#my_Canvas.opened {
+    width: 80%;
+}
+
+#my_Canvas.closed {
+    width: 98.4%;
 }
 
 #canvas-2-div {
@@ -61,7 +68,7 @@ body * {
 #menu-container {
     box-sizing: border-box;
     border: 1px inset black;
-    min-width: 1%;
+    min-width: 1.5%;
     max-width: 20%;
     width: fit-content;
     height: 100%;
@@ -80,6 +87,7 @@ body * {
     display: block;
     float: left;
 }
+
 #ui-container {
     transition: 1s;
     float: left;
@@ -87,7 +95,7 @@ body * {
 }
 
 #ui-container.opened {
-    width: 230px;
+    width: 90%;
     /*border: 2px solid red;*/
     height: 100%;
 }
@@ -103,14 +111,6 @@ body * {
 
 #ui-container * {
     margin: 3px 1vw;
-}
-
-#my_Canvas.opened {
-    width: 80%;
-}
-
-#my_Canvas.closed {
-    width: 98.6%;
 }
 
 #canvas-2-close {
@@ -154,4 +154,39 @@ button.invisible {
     border-radius: 10pt;
     border: solid white 2pt;
     background-clip: border-box;
+}
+
+.mobileVisible{
+    display: none;
+}
+
+/** RESPONSIVE FOR MOBILE PHONES **/
+@media screen and (max-width: 500px) {
+    #my_Canvas.opened {
+        width: 50%;
+        min-width: 110px;
+    }
+
+    #my_Canvas.closed {
+        width: 95%;
+    }
+
+    #menu-container {
+        min-width: 12px;
+        max-width: 49.5%;
+    }
+
+    #menu-button {
+        width: 12px;
+        font-size: 1em;
+    }
+
+    #ui-container *{
+        font-size: 0.5em;
+    }
+
+    .mobileVisible{
+        display: block;
+    }
+
 }
