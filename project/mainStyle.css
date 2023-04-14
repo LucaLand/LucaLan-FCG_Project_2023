@@ -139,7 +139,8 @@ button {
 }
 
 button.invisible {
-    display: none;
+    /*display: none;*/
+    visibility: hidden;
 }
 
 .buttonDiv {
@@ -186,7 +187,7 @@ button.invisible {
     }
 
     .mobileVisible{
-        display: block;
+        display: inline;
     }
 
 }
