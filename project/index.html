@@ -291,6 +291,10 @@
     <div class="buttonDiv">
         <button id="buttonVisual" onclick="changeCameraMode()">Prima Persona!</button>
         <button id="buttonFoto" onclick="foto()" class="invisible">SCATTAAA!</button>
+        <button id="buttonForward" onclick="move(directions.Forward)" class="mobileVisible">/\</button>
+        <button id="buttonBackward" onclick="move(directions.Backward)" class="mobileVisible">\/</button>
+        <button id="buttonRight" onclick="r(directions.Right)" class="mobileVisible">></button>
+        <button id="buttonLeft" onclick="r(directions.Left)" class="mobileVisible"><</button>
     </div>
     <canvas width="800" height="800" id="my_Canvas" class="canvas closed"></canvas>
     <div id="menu-container">
@@ -308,6 +312,8 @@
             <label for="animation">ANIMATION</label> <input id="animation" type="checkbox" onchange="main.pullSettingsFromUI()"><br>
             <label for="frustum">FRUSTUM</label> <input id="frustum" type="checkbox" onchange="main.pullSettingsFromUI()"><br>
             <label for="lightScene">Light Scene</label> <input id="lightScene" type="checkbox" onchange="main.pullSettingsFromUI()"><br>
+            <label for="distance" class="mobileVisible">Distance</label> <input id="distance" type="number" value="5" onchange="main.pullSettingsFromUI('d')" class="mobileVisible"><br>
+            <label for="fov" class="mobileVisible">Fov</label> <input id="fov" type="number" value="60" onchange="main.pullSettingsFromUI('fov')" class="mobileVisible"><br>
         </div>
     </div>
     <div id="canvas-2-div" class="closed">
@@ -368,7 +374,6 @@
         let downloadButton = canvas2Div.children.item(2)
         let canvas2Classes;
 
-        //let closeButtonVisbility, fotoTextVisibility;
         if(bool){
             canvas2Classes = "opened";
             closeButton.removeAttribute("hidden");
@@ -401,6 +406,13 @@
         this.href = dt.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
     }
     document.getElementById("canvas-2-download").addEventListener('click', downloadCanvas, false);
+
+    function move(direction){
+        main.moveObj(direction, 2.5);
+    }
+    function r(direction) {
+        main.rotateObj(direction, 5);
+    }
 </script>
 
 </body>

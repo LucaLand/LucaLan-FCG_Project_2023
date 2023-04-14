@@ -62,6 +62,9 @@ const UserInputHandler = function (cam, canvas){
                 break;
         }
 
+        //DEBUGGING
+        // console.log(e);
+
         eventHandlerMap.forEach(entry => {
             if (entry.eventName === eventType)
                 entry.eventHandler(e);
@@ -73,7 +76,6 @@ const UserInputHandler = function (cam, canvas){
         drag = true;
         old.x = e.pageX;
         old.y = e.pageY;
-        //e.preventDefault();
     }
 
     const mouseUpDefaultHandler = function (e){
@@ -100,7 +102,7 @@ const UserInputHandler = function (cam, canvas){
             let cur = {x: e.pageX, y:e.pageY};
             let dY = -(cur.y-old.y)*2*Math.PI/canvas.height;
             if(angleVertical+dY <= 1.5 && angleVertical+dY >= -1.5)
-            angleVertical += dY;
+                angleVertical += dY;
             old.x=cur.x;
             old.y=cur.y;
         }
@@ -206,7 +208,10 @@ const UserInputHandler = function (cam, canvas){
         {eventName: events.onMouseUp, eventHandler: mouseUpDefaultHandler},
         {eventName: events.onMouseMove, eventHandler: mouseMoveDefaultHandler},
         {eventName: events.onWheel, eventHandler: wheelHandler},
-        {eventName: events.onKeyDown, eventHandler: keyDownHandlerMap}
+        {eventName: events.onKeyDown, eventHandler: keyDownHandlerMap},
+        {eventName: events.onTouchStart, eventHandler: mouseDownDefaultHandler},
+        {eventName: events.onTouchEnd, eventHandler: mouseUpDefaultHandler},
+        {eventName: events.onTouchMove, eventHandler: mouseMoveHandlerFreeCamera}
     ]
 
     const eventHandlerArrayMapFirstPerson = [
@@ -214,7 +219,10 @@ const UserInputHandler = function (cam, canvas){
         {eventName: events.onKeyDown, eventHandler: keyDownHandlerMap},
         {eventName: events.onMouseDown, eventHandler: mouseDownDefaultHandler},
         {eventName: events.onMouseUp, eventHandler: mouseUpDefaultHandler},
-        {eventName: events.onMouseMove, eventHandler: mouseMoveHandlerFirstPerson}
+        {eventName: events.onMouseMove, eventHandler: mouseMoveHandlerFirstPerson},
+        {eventName: events.onTouchStart, eventHandler: mouseDownDefaultHandler},
+        {eventName: events.onTouchEnd, eventHandler: mouseUpDefaultHandler},
+        {eventName: events.onTouchMove, eventHandler: mouseMoveHandlerFirstPerson}
     ]
 
     const eventHandlerArrayMapFreeCamera = [
@@ -222,7 +230,10 @@ const UserInputHandler = function (cam, canvas){
         {eventName: events.onKeyDown, eventHandler: keyDownHandlerMapFreeCamera},
         {eventName: events.onMouseDown, eventHandler: mouseDownDefaultHandler},
         {eventName: events.onMouseUp, eventHandler: mouseUpDefaultHandler},
-        {eventName: events.onMouseMove, eventHandler: mouseMoveHandlerFreeCamera}
+        {eventName: events.onMouseMove, eventHandler: mouseMoveHandlerFreeCamera},
+        {eventName: events.onTouchStart, eventHandler: mouseDownDefaultHandler},
+        {eventName: events.onTouchEnd, eventHandler: mouseUpDefaultHandler},
+        {eventName: events.onTouchMove, eventHandler: mouseMoveHandlerFreeCamera}
     ]
 
     this.setMovementTarget = function (movementTargetObj){
@@ -280,7 +291,7 @@ const UserInputHandler = function (cam, canvas){
         camera.setCameraPosition(targetObjMesh.getPosition()[0], targetObjMesh.getPosition()[1], targetObjMesh.getPosition()[2]);
         angle = targetObjMesh.getRotation()[1];
         camera.setAngle(angle, angleVertical);
-        targetObjMesh.setRotation(-angleVertical, angle, 0);
+        targetObjMesh.setRotation(0, angle, 0);
         camera.move(directions.Forward, 1);
         camera.setTargetForward();
 

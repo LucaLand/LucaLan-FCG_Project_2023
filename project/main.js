@@ -174,6 +174,14 @@ const Main = function() {
         light.enableFrustumDraw = settings.frustum;
         if(changeName === "lightColor")
             light.setLightColorVec4(settings.lightColor[0], settings.lightColor[1], settings.lightColor[2]);
+
+        if(changeName === "d"){
+            camera.distance = Settings.distance;
+        }
+
+        if(changeName === "fov"){
+            camera.fieldOfViewRadians = degToRad(Settings.fov);
+        }
     }
 
     function pushSettingsInUI(){
@@ -218,6 +226,20 @@ const Main = function() {
 
         let lightScene = document.getElementById("lightScene");
         Settings.lightScene = lightScene.checked;
+
+        let d = document.getElementById("distance");
+        if(d.value < 2.5)
+            d.value = 2.5;
+        if(d.value > 13)
+            d.value = 13;
+        Settings.distance = d.value;
+
+        let fov = document.getElementById("fov");
+        if(fov.value < 20)
+            fov.value = 20;
+        if(fov.value > 120)
+            fov.value = 120;
+        Settings.fov = fov.value;
 
         //Handle them
         handleSettings(Settings, changeName);
@@ -281,6 +303,17 @@ const Main = function() {
                 canvas2GlDrawer.setSkybox(skybox2);
             }
         }
+    }
+
+    this.moveObj = function (direction, step){
+        objCamera.move(direction, step);
+    }
+
+    this.rotateObj = function (direction, angle){
+        if(direction === directions.Right)
+            angle = -angle;
+
+        objCamera.rotate(0, angle, 0);
     }
 
 };

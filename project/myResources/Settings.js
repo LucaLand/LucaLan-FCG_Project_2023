@@ -12,5 +12,7 @@ const Settings = {
     animation: false,
     frustum: false,
     transparency: true,
-    lightScene: false
+    lightScene: false,
+    distance: 3,
+    fov: 60
 }
