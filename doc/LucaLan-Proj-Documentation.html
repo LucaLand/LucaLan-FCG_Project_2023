@@ -6,6 +6,9 @@
     <style>
         body {
             background-color: rgba(221, 221, 221, 0.32);
+            box-sizing: border-box;
+            font-family: sans-serif;
+            font-size: 18px;
         }
 
         b {
@@ -22,10 +25,34 @@
             background-color: aliceblue;
             border-top: 1px solid gainsboro;
             border-bottom: 1px solid gainsboro;
+
+            display: flex;
+            justify-content: center;
+            color:blue;
         }
 
         .title {
             color: rgba(255, 0, 0, 0.80);
+        }
+
+        .imgContainer{
+            width: 100%;
+            display: block;
+        }
+
+        .image1 {
+            height: 400px;
+            width: 800px;
+            margin: 0 auto;
+            right: 10vw;
+        }
+
+        .image2 {
+            height: 400px;
+            width: 800px;
+            margin: 10px auto;
+            position: relative;
+            left: 10vw;
         }
 
     </style>
@@ -39,6 +66,12 @@
     <p>L'idea nasce proprio in una giornata di sole, nella quale ho scattato alcune foto alle strade del centro, e rivedendole mi sono salatati all'occhio piccoli ma importanti dettagli che mi hanno ispirato alla realizzazione di questo progetto.</p>
     <p>Per questo all'interno del progetto ho deciso d'inserire, per rendere onore alla bellezza della scena, una macchina fotografica come oggetto animato, con la quale sia possibile collocarsi in varie angolazioni e scattare foto ricordo che sarà possibile scaricare</p>
     <p>Sono questi gli obiettivi principali del mio prototipo di progetto che implementa le funzionalità principali appena descritte.</p>
+<div class="imgContainer">
+    <img src="images/Foto-1.0.png" class="image1" alt="Immagine di esempio dell'applicazione">
+    <img src="images/Foto-1.1.png" class="image2" alt="Immagine di esempio dell'applicazione">
+    <img src="images/Foto-1.1.png" class="image1" alt="Immagine di esempio dell'applicazione">
+</div>
+
 <hr><hr>
 <h2>Indice</h2>
     <ul id="elenco-indice">
@@ -93,7 +126,7 @@
             <li>Con i tasti <b>A</b> e <b>D</b> si ruota l'oggetto</li>
             Il movimento dell'oggetto avverrà sul suo asse frontale, dunque se si ruota l'oggetto questo poi su muoverà avanti in base a come è stato angolato.
         </ul>
-        L'ogetto si muove solo sul piano orizzontale.
+        L'oggetto si muove solo sul piano orizzontale.
     </p>
     <p>
         Con il Trackpad/mouse sono stati gestiti invece ulteriori controlli riguardanti la telecamera.
@@ -115,27 +148,88 @@
                     <li>In "Prima Persona" invece permette di regolare lo zoom della fotocamera</li>
                 </ul>
             </li>
-            <li>Comandi touch per quanto riguarda i dispositivi mobili</li>
             <li>
+                Comandi touch per quanto riguarda i dispositivi mobili
+                <ul>
+                    <li>Comandi touch che rispecchiano l'utilizzo del mouse</li>
+                    <li>Bottoni che permetteranno la sostituzione dei comandi di movimento da tastiera</li>
+                    <li>Impostazioni nel menu che permettono la gestione della Fov e della Distanza in modo da sostituire il pan da trackpad/la rotella</li>
+                </ul>
             </li>
         </ul>
-        <p>
-    </p>
+        <p> La possibilità di scattare foto sarà data in ogni caso dai bottoni presenti in alto a sinistra. Il pulsante di scatto appare solo in prima persona
+        e permette lo scatto della foto e l'apertura del secondo canvas in cui viene visualizzata la foto scattata</p>
 
+        <p>Il secondo canvas con l'ultima foto scattata si trova in basso a sinistra e:
+            <ul>
+                <li>lo si può cliccare per aprilo ed visualizzare la foto</li>
+                <li>Dopo di chè sarà possibile chiuderlo tramite la "x" di chiusura</li>
+                <li>O scaricare la foto fatta sul proprio PC cliccando sulla scritta "Download"</li>
+            </ul>
+        </p>
 
 
 <h3 id="illuminazione">Illuminazione</h3>
+<p>L'illuminazione è stata gestita e controllata in modo da avere un modello quanto più simile alla realtà. Con ovviamente alcune limitazioni per motivi di tempo richiesti per sviluppare ulteriori dettagli, sicuramente sviluppabili in futuro.</p>
+<p>Il modello di visualizzazione e di gestione delle luci è stato gestito prinicipalmente nei vari shader del progetto. Che per la precisione sono 3.
+    <ul>
+        <li>Uno per il lo Skybox (che non è affetton dai cambiamenti dell'illuminazione)</li>
+        <li>Uno per tutti gli oggetti che implementa un modello di Phong modificato per il rendering della luce, come ad esempio le riflessioni e i colori</li>
+        <li>Un terzo per la creazione della DepthTexture per il disegno delle ombre</li>
+    </ul>
+</p>
+<p>Gli shader prendolo le informazioni di illuminazione e le varie impostazioni con il passaggio degli uniform nel momento del rendering. Gli uniform provengono sia dalle caratteristiche delle mesh prese dal file MTL degli Obj, sia dall'oggetto "Light" implementato che definisce come la scena viene illuminata.
+E grazie a questo oggetto Javascript è possibile creare e modificare i vari tipi di illuminaizone presenti all'interno del progetto.</p>
     <h4 id="luci">Luci</h4>
+        <ul>
+            <li>Il modello d'illuminazione è definito dello shader: </li>
+            <li>Nelle impostazioni è possibile passare da Giorno a Notte modificando così anche il tipo di illuminazione presente nella scena:
+                <ul>
+                    <li>Giorno: Luce direzione (a imitare il sole)</li>
+                    <li>Notte: Luce puntiforme (a simulare la luce di un lampione/faro)</li>
+                </ul>
+                <li>Per la notte sono presenti 3 tipi di luci diverse, con diverse angolazioni e giochi di luce</li>
+                <li>Inoltre è possibile attivare l'animazione della luce tramite le impostazioni, attivando un cambio di direzione fluido ed automatico della luce</li>
+                <li>E' possibile anche modificare il colore della luce tramite le impostazioni</li>
+        </ul>
     <h4 id="ombre">Ombre</h4>
+    <ul>
+        <li>Per le ombre è stato utilizzato il "color-shader" per riempire la DepthTexture e poi calcolare nello shader principale quali pixel sono in luce e quali no</li>
+        <li>Tramite le impostazioni è possibile attivarle e disattivarle per ottenere scene diverse</li>
+    </ul>
     <h4 id="riflessioni">Riflessioni</h4>
-
-<h3 id="dettagli-grafici">Dettagli Grafici</h3>
-    <h4>Trasparenze (finestre)</h4>
-    <h4>Bump Mapping (Terreno)</h4>
-
-<h3 id="visuale">Visuale</h3>
+        <p>Le riflessioni implementate riguardano l'illuminazione. Ogni oggetto in base alle caratteristiche del suo materiale riflette la luce in modo diverso.
+        E' possibile infatti notare su ogni superficie che più ci si avvicina all'angolo di riflessione della sorgente luminosa più rifletterà</p>
 
 <h3 id="controlli-e-config">Controlli e Configurazioni</h3>
+<p>Per quanto riguarda i controlli è stato implementato un menù, creato da zero, con all'interno alcune impostazioni per la modifica della scena e della visuale</p>
+<ul>
+    <li>Time</li>
+        Per la modifica dell'ora del giorno (ovvero della direzione dei raggi solari), in modo da poter creare differenti i giochi di ombre.
+    <li>Sun</li>
+        L'impostazione permette di passare dalla modalità "Giorno" alla modalità "Notte".
+    <li>Shadows</li>
+        Permette l'attivazione e la disattivazione del rendering delle ombre.
+    <li>Light Color</li>
+        Permette d'impostare il colore della luce che illumina la scena.
+    <li>Back Face Culling</li>
+        Permette l'attivazione e la disattivazione dell'impostazione del "Back Face Culling".
+    <li>Lamp Type</li>
+        Permetet di scegliere, nella modalità notte, tre differenti tipi di illuminazione.
+    <li>Animation</li>
+        Permette di Attivare e Disattivare l'animazione automatica della luce.
+    <li>Frustum</li>
+        Attiva e Disattiva il rendering del "frustum" della luce.
+    <li>Light Scene</li>
+        Attiva o disattiva l'impostazione di scena "light" diminuendo il numero di oggetti all'interno della scena per renderla più fluida per PC meno prestazionali.
+</ul>
+<p>Opzionalmente in caso di dispositivi mobile</p>
+<ul>
+    <li>Distance</li>
+        Permette la modifica della distanza della camera dall'oggetto principale (la camera digitale).
+    <li>Fov</li>
+        Permette la modifica e il setting della <i>Field of View</i> della camera.
+</ul>
 
 </body>
 </html>
