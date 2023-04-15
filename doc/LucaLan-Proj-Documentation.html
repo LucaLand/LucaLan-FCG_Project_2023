@@ -9,6 +9,7 @@
             box-sizing: border-box;
             font-family: sans-serif;
             font-size: 18px;
+            margin: 15px;
         }
 
         b {
@@ -26,9 +27,9 @@
             border-top: 1px solid gainsboro;
             border-bottom: 1px solid gainsboro;
 
-            display: flex;
-            justify-content: center;
-            color:blue;
+            /*display: flex;*/
+            /*justify-content: center;*/
+            /*color:blue;*/
         }
 
         .title {
@@ -43,16 +44,38 @@
         .image1 {
             height: 400px;
             width: 800px;
-            margin: 0 auto;
+            margin: 15px;
             right: 10vw;
         }
 
         .image2 {
             height: 400px;
             width: 800px;
-            margin: 10px auto;
+            margin: 15px;
             position: relative;
             left: 10vw;
+        }
+
+        .image3 {
+            height: 300px;
+            width: 500px;
+            margin: 15px;
+        }
+
+        .image4 {
+            height: 350px;
+            width: 700px;
+            margin: 15px;
+        }
+
+        .image5 {
+            width: 400px;
+            height: 180px;
+            margin: 15px;
+        }
+
+        p {
+            margin-left: 11px;
         }
 
     </style>
@@ -85,6 +108,7 @@
         </ul>
         <li><a href="#dettagli-grafici">Dettagli Grafici</a></li>
         <li><a href="#controlli-e-config">Controlli e Configurazioni</a></li>
+        <li><a href="#conclusioni">Conclusioni</a></li>
     </ul>
 <hr><hr>
 
@@ -94,27 +118,50 @@
         I principali oggetti presenti nel progetto sono:
         <ul>
             <li>Una macchina fotografica come Obj principale che è possibile muovere all'interno della scena</li>
+                <img src="images/Foto-2.2.png" class="image3" alt="Immagine di esempio dell'applicazione">
             <li>Dei porticati a racchiudere la scena esplorabile permettendo di mostrare ancora più dettagli sui giochi di ombre</li>
             <li>Un Obj della torre Eiffel per rendere la scena più fotografica e permettere di apprezzare le ombre di una geometria complessa</li>
+                <img src="images/Foto-2.1.png" class="image3" alt="Immagine di esempio dell'applicazione">
             <li>Alcuni Obj di abbellimento, come delle panchine e un lampione da strada per rendere il prototipo di scena più realistico</li>
+                <img src="images/Foto-2.3.png" class="image3" alt="Immagine di esempio dell'applicazione">
+            <li>Un obj con la foto dell'autore del progetto</li>
         </ul>
     </p>
     <p>
         Le funzionalità più importanti riguardano:
         <ul>
             <li>La possibilità di muovere l'oggetto Fotocamera nella scena tramite tastiera e mouse/trackpad</li>
+                <img src="images/Foto-2.0.png" class="image3" alt="Immagine di esempio dell'applicazione">
             <li>La possibilità di cambiare la visuale passando dalla 'Terza Persona' alla "Prima Persona"</li>
+                <img src="images/Foto-2.4.png" style="width: 500px; height: 150px" alt="Immagine di esempio dell'applicazione">
+                <img src="images/Foto-2.4-2.png" style="width: 500px; height: 150px" alt="Immagine di esempio dell'applicazione">
+                <img src="images/Foto-2.4-4.png" style="width: 500px; height: 150px" alt="Immagine di esempio dell'applicazione">
             <li>Possibilità di passare alla "Camera Libera" per poter esplorare liberamente la scena e gli ulteriori dettagli</li>
+                <img src="images/Foto-2.5.png" class="image2" alt="Immagine di esempio dell'applicazione">
             <li>Scatto di foto in prima persona, modificando anche lo zoom e l'inquadratura tramite mouse</li>
-            <li>E' presente un secondo canvas in cui verrà visualizzata la foto scattata che sarà possibile anche scaricare e salvare</li>
+                <img src="images/Foto-2.3.png" class="image3" alt="Immagine di esempio dell'applicazione">
+            <li>E' presente un secondo canvas in cui verrà visualizzata la foto scattata che sarà possibile anche <b>scaricarla</b> e salvarla</li>
+               <img src="images/Foto-2.6.png" class="image2" alt="Immagine di esempio dell'applicazione">
             <li>Tramite il Menù sarà possibile accedere alle impostazioni che permettonon di modificare le opzioni grafiche della camera permettendo l'ottenimento di ulteriori effetti grafici per le proprie foto</li>
+                <img src="images/Foto-2.7.png" class="image3" alt="Immagine di esempio dell'applicazione">
         </ul>
     </p>
     <p>
-        La camera di default seguirà il nostro oggetto principale, partendo con una camera in "Terza Persona", il quale potrà muoversi solo all'interno dei confini della nostra scena.
-        Sarà possible poi cambiare visuali tramite i comandi appositi, e in prima persona verrà visualizzato il pulsante per scattare una foto.
+        La camera di default seguirà il nostro oggetto principale, partendo con una camera in "Terza Persona", il quale potrà muoversi solo all'interno dei confini della nostra scena.<br>
+        Sarà possible poi cambiare visuali tramite i comandi appositi, e in prima persona verrà visualizzato il pulsante per scattare una foto.<br>
         La "Prima persona" simula dunque l'inquadratura della Fotocamera, della quale sarà possibile anche modificare angolatura e zoom tramite i comandi che verranno descritti in seguito.
     </p>
+
+    <p>Le ulteriori ed importanti funzionalità realizzate sono:</p>
+    <ul>
+        <li>La gestione della luce solare modificando la direzione nelle impostazioni</li>
+        <li>La possibilità di abilitare la modalità <b>Notte</b> o <b>Giorno</b>, modificando il tipo di illuminazione da "Sole" a "Lampione"</li>
+        <img src="images/Foto-3.0.png" class="image3" alt="Immagine di esempio dell'applicazione">
+        <img src="images/Foto-3.1.png" class="image3" alt="Immagine di esempio dell'applicazione">
+        <li>La possibilità di modificare il colore della luce nella scena</li>
+        <img src="images/Foto-3.2.png" class="image3" alt="Immagine di esempio dell'applicazione">
+        <li>Abilitare l'animazione automatica delle luci nella scena, per osservare meglio i giochi di ombra in maniera fluida</li>
+    </ul>
 
 <h3 id="interazione-utente">Interazione Utente e Visuali</h3>
     <p>L'interazione con l'utente è stata gestita nella maniera più intuitiva possibile.
@@ -124,6 +171,7 @@
             <li>Con i tasti <b>W</b>,<b>S</b> si muove l'ogetto in avanti e indietro</li>
             <li>Con i tasti <b>Q</b> ed <b>E</b> si sposta l'oggetto in orizzontale, rispettivamente Sinistra e Destra</li>
             <li>Con i tasti <b>A</b> e <b>D</b> si ruota l'oggetto</li>
+            <li>Con il tasto <b>V</b> è possibile cambiare visuale</li>
             Il movimento dell'oggetto avverrà sul suo asse frontale, dunque se si ruota l'oggetto questo poi su muoverà avanti in base a come è stato angolato.
         </ul>
         L'oggetto si muove solo sul piano orizzontale.
@@ -136,12 +184,13 @@
             <li><b>Prima Persona</b></li>
             <li><b>Visuale Libera</b></li>
         </ul>
-        <p></p>
+        <p>Con i seguenti comandi:</p>
         <ul>
             <li>Con il Trascinamento del cursore è possible modificare l'inquadratura della camera.</li>
-                Nel caso della terza persona permetterà di ruotare attorno all'oggetto.
-                In prima persona invece permetterà di modificare l'angolo verticale di visualizzazione.
-            <br>
+                <ul>
+                    <li>Nel caso della terza persona permetterà di ruotare attorno all'oggetto.</li>
+                    <li>In prima persona invece permetterà di modificare l'angolo verticale di visualizzazione.</li>
+                </ul>
             <li>Il Pan-in/out sul Trackpad o la Rotella sul mouse permettono invece di:
                 <ul>
                     <li>In "Terza Persona": avvicina e allontana la camera (visuale) dall'oggetto.</li>
@@ -149,22 +198,25 @@
                 </ul>
             </li>
             <li>
-                Comandi touch per quanto riguarda i dispositivi mobili
+                Comandi touch per quanto riguarda i <b>dispositivi mobili</b>
                 <ul>
                     <li>Comandi touch che rispecchiano l'utilizzo del mouse</li>
                     <li>Bottoni che permetteranno la sostituzione dei comandi di movimento da tastiera</li>
+                        <img src="images/Foto-4.0.png" style="width: 200px; height: 350px" alt="Immagine di esempio dell'applicazione">
                     <li>Impostazioni nel menu che permettono la gestione della Fov e della Distanza in modo da sostituire il pan da trackpad/la rotella</li>
+                        <img src="images/Foto-4.1.png" style="width: 200px; height: 350px" alt="Immagine di esempio dell'applicazione">
                 </ul>
             </li>
         </ul>
         <p> La possibilità di scattare foto sarà data in ogni caso dai bottoni presenti in alto a sinistra. Il pulsante di scatto appare solo in prima persona
         e permette lo scatto della foto e l'apertura del secondo canvas in cui viene visualizzata la foto scattata</p>
-
+            <img src="images/Foto-2.4.png" style="width: 500px; height: 150px" alt="Immagine di esempio dell'applicazione">
         <p>Il secondo canvas con l'ultima foto scattata si trova in basso a sinistra e:
             <ul>
                 <li>lo si può cliccare per aprilo ed visualizzare la foto</li>
                 <li>Dopo di chè sarà possibile chiuderlo tramite la "x" di chiusura</li>
                 <li>O scaricare la foto fatta sul proprio PC cliccando sulla scritta "Download"</li>
+                    <img src="images/Foto-1.2copia.png" class="image2" style="width: 800px; height: 300px;" alt="Immagine di esempio dell'applicazione">
             </ul>
         </p>
 
@@ -173,8 +225,8 @@
 <p>L'illuminazione è stata gestita e controllata in modo da avere un modello quanto più simile alla realtà. Con ovviamente alcune limitazioni per motivi di tempo richiesti per sviluppare ulteriori dettagli, sicuramente sviluppabili in futuro.</p>
 <p>Il modello di visualizzazione e di gestione delle luci è stato gestito prinicipalmente nei vari shader del progetto. Che per la precisione sono 3.
     <ul>
-        <li>Uno per il lo Skybox (che non è affetton dai cambiamenti dell'illuminazione)</li>
-        <li>Uno per tutti gli oggetti che implementa un modello di Phong modificato per il rendering della luce, come ad esempio le riflessioni e i colori</li>
+        <li>Uno per il lo Skybox (che non è affetto dai cambiamenti dell'illuminazione)</li>
+        <li>Uno per tutti gli oggetti che implementa un modello di illuminazione personalizzato e modificato per il rendering della luce, come ad esempio le riflessioni e i colori</li>
         <li>Un terzo per la creazione della DepthTexture per il disegno delle ombre</li>
     </ul>
 </p>
@@ -191,45 +243,64 @@ E grazie a questo oggetto Javascript è possibile creare e modificare i vari tip
                 <li>Per la notte sono presenti 3 tipi di luci diverse, con diverse angolazioni e giochi di luce</li>
                 <li>Inoltre è possibile attivare l'animazione della luce tramite le impostazioni, attivando un cambio di direzione fluido ed automatico della luce</li>
                 <li>E' possibile anche modificare il colore della luce tramite le impostazioni</li>
+            <img src="images/Foto-5.0.png" style="width: 400px; height: 200px" alt="Immagine di esempio dell'applicazione">
+            <img src="images/Foto-5.1.png" style="width: 400px; height: 200px" alt="Immagine di esempio dell'applicazione">
         </ul>
     <h4 id="ombre">Ombre</h4>
     <ul>
         <li>Per le ombre è stato utilizzato il "color-shader" per riempire la DepthTexture e poi calcolare nello shader principale quali pixel sono in luce e quali no</li>
         <li>Tramite le impostazioni è possibile attivarle e disattivarle per ottenere scene diverse</li>
+        <li>Inoltre è stata utilizzata una dimensione molto grande per la DepthTexture in modo da avere ombre più definite possibili ed evitare il loro effetto di pixel</li>
+        <img src="images/Foto-6.0.png" class="image4" alt="Immagine di esempio dell'applicazione">
     </ul>
     <h4 id="riflessioni">Riflessioni</h4>
         <p>Le riflessioni implementate riguardano l'illuminazione. Ogni oggetto in base alle caratteristiche del suo materiale riflette la luce in modo diverso.
         E' possibile infatti notare su ogni superficie che più ci si avvicina all'angolo di riflessione della sorgente luminosa più rifletterà</p>
-
+        <img src="images/Foto-7.0.png" class="image5" alt="Immagine di esempio dell'applicazione">
+        <img src="images/Foto-7.1.png" class="image5" alt="Immagine di esempio dell'applicazione">
+        <img src="images/Foto-7.2.png" class="image5" alt="Immagine di esempio dell'applicazione">
 <h3 id="controlli-e-config">Controlli e Configurazioni</h3>
 <p>Per quanto riguarda i controlli è stato implementato un menù, creato da zero, con all'interno alcune impostazioni per la modifica della scena e della visuale</p>
 <ul>
-    <li>Time</li>
-        Per la modifica dell'ora del giorno (ovvero della direzione dei raggi solari), in modo da poter creare differenti i giochi di ombre.
-    <li>Sun</li>
-        L'impostazione permette di passare dalla modalità "Giorno" alla modalità "Notte".
-    <li>Shadows</li>
-        Permette l'attivazione e la disattivazione del rendering delle ombre.
-    <li>Light Color</li>
-        Permette d'impostare il colore della luce che illumina la scena.
-    <li>Back Face Culling</li>
-        Permette l'attivazione e la disattivazione dell'impostazione del "Back Face Culling".
-    <li>Lamp Type</li>
-        Permetet di scegliere, nella modalità notte, tre differenti tipi di illuminazione.
-    <li>Animation</li>
-        Permette di Attivare e Disattivare l'animazione automatica della luce.
-    <li>Frustum</li>
-        Attiva e Disattiva il rendering del "frustum" della luce.
-    <li>Light Scene</li>
-        Attiva o disattiva l'impostazione di scena "light" diminuendo il numero di oggetti all'interno della scena per renderla più fluida per PC meno prestazionali.
+
+    <li><b>Time</b>: per la modifica dell'ora del giorno (ovvero della direzione dei raggi solari), in modo da poter creare differenti i giochi di ombre.</li>
+    <li><b>Sun</b>: l'impostazione permette di passare dalla modalità "Giorno" alla modalità "Notte".</li>
+    <li><b>Shadows</b>: permette l'attivazione e la disattivazione del rendering delle ombre.</li>
+    <li><b>Light Color</b>: permette d'impostare il colore della luce che illumina la scena.</li>
+    <li><b>Back Face Culling</b>: permette l'attivazione e la disattivazione dell'impostazione del "Back Face Culling".</li>
+    <li><b>Lamp Type</b>: permette di scegliere, nella modalità notte, tre differenti tipi d'illuminazione.</li>
+    <li><b>Animation</b>: permette di Attivare e Disattivare l'animazione automatica della luce.</li>
+    <li><b>Frustum</b>: Attiva e Disattiva il rendering del "frustum" della luce.</li>
+    <li><b>Light Scene</b>: Attiva o disattiva l'impostazione di scena "light" diminuendo il numero di oggetti all'interno della scena per renderla più fluida per PC meno prestazionali.</li>
+<!--    <img src="images/Foto-8.0.png" class="image2" style="width: 800px; height: 400px;" alt="Immagine di esempio dell'applicazione">-->
+    <img src="images/Foto-8.1.png" class="image2" style="width: 250px; height: 550px;" alt="Immagine di esempio dell'applicazione">
 </ul>
 <p>Opzionalmente in caso di dispositivi mobile</p>
 <ul>
-    <li>Distance</li>
-        Permette la modifica della distanza della camera dall'oggetto principale (la camera digitale).
-    <li>Fov</li>
-        Permette la modifica e il setting della <i>Field of View</i> della camera.
+    <li><b>Distance</b>: permette la modifica della distanza della camera dall'oggetto principale (la camera digitale).</li>
+    <li><b>Fov</b>: Permette la modifica e il setting della <i>Field of View</i> della camera.</li>
 </ul>
 
+
+<h3 id="conclusioni">Conclusioni</h3>
+<h4>Textures</h4>
+<p>Un ultima nota riguarda le texture utilizzate, come quella del pannello, che raffigura una foto della'utore del progetto.</p>
+<img src="images/Foto-9.0.png" class="image2" alt="Immagine di esempio dell'applicazione">
+<p>Inoltre, sono state inserite ulteriori texture, come quella della panchina o quella del pavimento, con le quali è stato effettuato l'uv mapping su belnder in modo da ottenere una giusta resa.</p>
+<p>Stesso è stato fatto per il pannello con l'immagine, la quale è stata inserita in modo da essere visibile da un solo lato in maniera corretta.</p>
+
+<h4>Conclusioni</h4>
+<p>Questo progetto vuole essere un prototipo di esempio, per questo per ragioni anche di tempistiche alcune impostazini sono state limitate e non gestite in ogni dettaglio.</p>
+<p>Ma il tutto è stato impostato e implementato in maniera modulare in modo da permettere facili sviluppi e modifiche future, come:</p>
+    <ul>
+        <li>L'aggiunta della gestione di ulteriori impostazioni</li>
+        <li>la modifica degli shader per un modello di illuminazione ancora più dettagliato e realistico riprendendo il modello di Phong</li>
+    <li>La gestione di ulteriori dettagli di grafica come le trasparenze e il bump mapping, per una scena ancora più realistica</li>
+    <li>La modifica dello skybox con immagini realizzate ad hoc per avere un ambientazione più realistica</li>
+    </ul>
+
+<p>Il progetto però implementa molte funzionalità che permettono all'utente di effettuare una gran quantità di azioni con anche una eccellente resa grafica, dimostrando tutte le potenzilità della computer grafica con WebGl e l'esplorazione e l'impegno messo nella realizzazione dello stesso, soprattuto in relazione ai dettagli grafici e di utilizzo.</p>
+
+<p><b>Grazie per l'attenzione!</b> - <i>Luca Landolfi</i></p>
 </body>
 </html>
