@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Relazione Luca Landolfi - Progetto FCG</title>
+    <style>
+        body {
+            background-color: rgba(221, 221, 221, 0.32);
+        }
+
+        b {
+            color: darkblue;
+        }
+
+        h1, h2, h3 {
+            color: mediumblue;
+            border-bottom: 1px solid gainsboro;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: aliceblue;
+            border-top: 1px solid gainsboro;
+            border-bottom: 1px solid gainsboro;
+        }
+
+        .title {
+            color: rgba(255, 0, 0, 0.80);
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>Progetto Fondamenti di Computer Graphics <br> <span class="title">Realistic City</span></h1>
+<h2>Introduzione</h2>
+    <p>Lo scopo di questo progetto è di ricreare attraverso le tecniche di <i>Computer Graphics</i> una scena simil realistica, prendendo come soggetto un cortile tributo alle strade di Parigi.</p>
+    <p>L'obiettivo è quello di gestire luci ed ombre e riflessioni (in futuro anche trasparenze e ulteriori dettagli) per ricreare una piccola ambientazione realistica, che ritragga un panorama degno di una foto.</p>
+    <p>L'idea nasce proprio in una giornata di sole, nella quale ho scattato alcune foto alle strade del centro, e rivedendole mi sono salatati all'occhio piccoli ma importanti dettagli che mi hanno ispirato alla realizzazione di questo progetto.</p>
+    <p>Per questo all'interno del progetto ho deciso d'inserire, per rendere onore alla bellezza della scena, una macchina fotografica come oggetto animato, con la quale sia possibile collocarsi in varie angolazioni e scattare foto ricordo che sarà possibile scaricare</p>
+    <p>Sono questi gli obiettivi principali del mio prototipo di progetto che implementa le funzionalità principali appena descritte.</p>
+<hr><hr>
+<h2>Indice</h2>
+    <ul id="elenco-indice">
+        <li><a href="#funzionalità">Funzionalità</a></li>
+        <li><a href="#interazione-utente">Interazione Utente e Visuale</a></li>
+        <li><a href="#illuminazione">Illuminazione</a></li>
+        <ul>
+            <li><a href="#luci">Luci</a></li>
+            <li><a href="#ombre">Ombre</a></li>
+            <li><a href="#riflessioni">Riflessioni</a></li>
+        </ul>
+        <li><a href="#dettagli-grafici">Dettagli Grafici</a></li>
+        <li><a href="#controlli-e-config">Controlli e Configurazioni</a></li>
+    </ul>
+<hr><hr>
+
+<h2 id="funzionalità">Funzionalità</h2>
+    <p>Le funzionalità di questo progetto riguardano la simulazione di una macchina fotografica con la ricreazione di un ambientazione realistica tramite i giochi di luce ed ombre.</p>
+    <p>
+        I principali oggetti presenti nel progetto sono:
+        <ul>
+            <li>Una macchina fotografica come Obj principale che è possibile muovere all'interno della scena</li>
+            <li>Dei porticati a racchiudere la scena esplorabile permettendo di mostrare ancora più dettagli sui giochi di ombre</li>
+            <li>Un Obj della torre Eiffel per rendere la scena più fotografica e permettere di apprezzare le ombre di una geometria complessa</li>
+            <li>Alcuni Obj di abbellimento, come delle panchine e un lampione da strada per rendere il prototipo di scena più realistico</li>
+        </ul>
+    </p>
+    <p>
+        Le funzionalità più importanti riguardano:
+        <ul>
+            <li>La possibilità di muovere l'oggetto Fotocamera nella scena tramite tastiera e mouse/trackpad</li>
+            <li>La possibilità di cambiare la visuale passando dalla 'Terza Persona' alla "Prima Persona"</li>
+            <li>Possibilità di passare alla "Camera Libera" per poter esplorare liberamente la scena e gli ulteriori dettagli</li>
+            <li>Scatto di foto in prima persona, modificando anche lo zoom e l'inquadratura tramite mouse</li>
+            <li>E' presente un secondo canvas in cui verrà visualizzata la foto scattata che sarà possibile anche scaricare e salvare</li>
+            <li>Tramite il Menù sarà possibile accedere alle impostazioni che permettonon di modificare le opzioni grafiche della camera permettendo l'ottenimento di ulteriori effetti grafici per le proprie foto</li>
+        </ul>
+    </p>
+    <p>
+        La camera di default seguirà il nostro oggetto principale, partendo con una camera in "Terza Persona", il quale potrà muoversi solo all'interno dei confini della nostra scena.
+        Sarà possible poi cambiare visuali tramite i comandi appositi, e in prima persona verrà visualizzato il pulsante per scattare una foto.
+        La "Prima persona" simula dunque l'inquadratura della Fotocamera, della quale sarà possibile anche modificare angolatura e zoom tramite i comandi che verranno descritti in seguito.
+    </p>
+
+<h3 id="interazione-utente">Interazione Utente e Visuali</h3>
+    <p>L'interazione con l'utente è stata gestita nella maniera più intuitiva possibile.
+    Infatti è stata usata una combinazione di Tastiera e Trackpad per gestire tutte le opzioni di movimento e di visualizzazione della camera.</p>
+    <p>Tramite la tastiera sarà possibile muovere l'oggetto o la camera stessa (in base a se ci si trova in modalià "Camera Libera" o meno):
+        <ul>
+            <li>Con i tasti <b>W</b>,<b>S</b> si muove l'ogetto in avanti e indietro</li>
+            <li>Con i tasti <b>Q</b> ed <b>E</b> si sposta l'oggetto in orizzontale, rispettivamente Sinistra e Destra</li>
+            <li>Con i tasti <b>A</b> e <b>D</b> si ruota l'oggetto</li>
+            Il movimento dell'oggetto avverrà sul suo asse frontale, dunque se si ruota l'oggetto questo poi su muoverà avanti in base a come è stato angolato.
+        </ul>
+        L'ogetto si muove solo sul piano orizzontale.
+    </p>
+    <p>
+        Con il Trackpad/mouse sono stati gestiti invece ulteriori controlli riguardanti la telecamera.
+        In questo caso questi differiscono in base alle 3 differenti visuali.
+        <ul>
+            <li><b>Terza Persona</b></li>
+            <li><b>Prima Persona</b></li>
+            <li><b>Visuale Libera</b></li>
+        </ul>
+        <p></p>
+        <ul>
+            <li>Con il Trascinamento del cursore è possible modificare l'inquadratura della camera.</li>
+                Nel caso della terza persona permetterà di ruotare attorno all'oggetto.
+                In prima persona invece permetterà di modificare l'angolo verticale di visualizzazione.
+            <br>
+            <li>Il Pan-in/out sul Trackpad o la Rotella sul mouse permettono invece di:
+                <ul>
+                    <li>In "Terza Persona": avvicina e allontana la camera (visuale) dall'oggetto.</li>
+                    <li>In "Prima Persona" invece permette di regolare lo zoom della fotocamera</li>
+                </ul>
+            </li>
+            <li>Comandi touch per quanto riguarda i dispositivi mobili</li>
+            <li>
+            </li>
+        </ul>
+        <p>
+    </p>
+
+
+
+<h3 id="illuminazione">Illuminazione</h3>
+    <h4 id="luci">Luci</h4>
+    <h4 id="ombre">Ombre</h4>
+    <h4 id="riflessioni">Riflessioni</h4>
+
+<h3 id="dettagli-grafici">Dettagli Grafici</h3>
+    <h4>Trasparenze (finestre)</h4>
+    <h4>Bump Mapping (Terreno)</h4>
+
+<h3 id="visuale">Visuale</h3>
+
+<h3 id="controlli-e-config">Controlli e Configurazioni</h3>
+
+</body>
+</html>
