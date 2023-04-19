@@ -109,7 +109,7 @@ const Main = function() {
         }
 
         // If more than 0 result in laggin behaviour (tryed to maximize performance with deltaTime)
-        if(deltaTime >=0 && loaded) {
+        if(deltaTime >=0 && start) {
             render(time);
         }
 

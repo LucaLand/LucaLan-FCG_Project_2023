@@ -1,8 +1,9 @@
 "use strict";
-let loaded = false;
+let start = false;
 let Skybox = function (gl, SkyBoxProgramInfo) {
     this.skyboxProgramInfo = SkyBoxProgramInfo;
     this.texture = null;
+    let loaded = 0;
 
     const faceInfos = [
         {
@@ -60,7 +61,9 @@ let Skybox = function (gl, SkyBoxProgramInfo) {
                 gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
                 gl.texImage2D(target, level, internalFormat, format, type, image);
                 gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-                loaded = true;
+                loaded++;
+                if(loaded >= 6)
+                    start = true;
             });
             faceInfo.image = image;
         });
