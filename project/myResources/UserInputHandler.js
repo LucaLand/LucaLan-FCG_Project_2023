@@ -72,13 +72,18 @@ const UserInputHandler = function (cam, canvas){
     }
 
     const mouseDownDefaultHandler = function (e){
-        console.log("mouse Pressed!")
+        console.log(e)
         drag = true;
+
+        if(e.type === events.onTouchStart) {
+            e = e.changedTouches[0];
+        }
         old.x = e.pageX;
         old.y = e.pageY;
     }
 
     const mouseUpDefaultHandler = function (e){
+        console.log(e)
         drag = false;
         old.x=0;
         old.y=0;
@@ -86,18 +91,26 @@ const UserInputHandler = function (cam, canvas){
     }
 
     const mouseMoveDefaultHandler = function (e){
-       if(drag){
+        e.preventDefault();
+        if(e.type === events.onTouchMove)
+            e = e.changedTouches[0];
+
+        if(drag){
            let cur = {x: e.pageX, y:e.pageY};   //windowToCanvas(canvas, e.pageX, e.pageY);
            let dX = -(cur.x-old.x)*2*Math.PI/canvas.width;
            let dY = -(cur.y-old.y)*2*Math.PI/canvas.height;
+            console.log(dY)
            camera.rotateCamera(dX, dY);
            old.x=cur.x;
            old.y=cur.y;
        }
-        e.preventDefault();
     }
 
     const mouseMoveHandlerFirstPerson = function (e){
+        e.preventDefault();
+        if(e.type === events.onTouchMove)
+            e = e.changedTouches[0];
+
         if(drag){
             let cur = {x: e.pageX, y:e.pageY};
             let dY = -(cur.y-old.y)*2*Math.PI/canvas.height;
@@ -106,10 +119,14 @@ const UserInputHandler = function (cam, canvas){
             old.x=cur.x;
             old.y=cur.y;
         }
-        e.preventDefault();
     }
 
     const mouseMoveHandlerFreeCamera = function (e){
+        e.preventDefault();
+        if(e.type === events.onTouchMove) {
+            e = e.changedTouches[0];
+        }
+
         if(drag){
             let cur = {x: e.pageX, y:e.pageY};   //windowToCanvas(canvas, e.pageX, e.pageY);
             let dX = -(cur.x-old.x)*2*Math.PI/canvas.width;
@@ -121,7 +138,6 @@ const UserInputHandler = function (cam, canvas){
             old.x=cur.x;
             old.y=cur.y;
         }
-        e.preventDefault();
     }
 
     const wheelHandler = function (e){
@@ -211,7 +227,7 @@ const UserInputHandler = function (cam, canvas){
         {eventName: events.onKeyDown, eventHandler: keyDownHandlerMap},
         {eventName: events.onTouchStart, eventHandler: mouseDownDefaultHandler},
         {eventName: events.onTouchEnd, eventHandler: mouseUpDefaultHandler},
-        {eventName: events.onTouchMove, eventHandler: mouseMoveHandlerFreeCamera}
+        {eventName: events.onTouchMove, eventHandler: mouseMoveDefaultHandler}
     ]
 
     const eventHandlerArrayMapFirstPerson = [
