@@ -162,7 +162,7 @@ button.invisible {
 }
 
 /** RESPONSIVE FOR MOBILE PHONES **/
-@media screen and (max-width: 500px) {
+@media only screen and (max-width: 1000px) {
     #my_Canvas.opened {
         width: 50%;
         min-width: 110px;
@@ -183,7 +183,7 @@ button.invisible {
     }
 
     #ui-container *{
-        font-size: 0.5em;
+        font-size: 3em;
     }
 
     .mobileVisible{
@@ -197,9 +197,9 @@ button.invisible {
     }
 
     button {
-        width: 50px;
-        height: 25px;
-        font-size: 0.5pt;
+        width: 12em;
+        height: 7em;
+        font-size: 5em;
     }
 
 }
